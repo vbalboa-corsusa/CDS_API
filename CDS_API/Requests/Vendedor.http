@@ -1,0 +1,33 @@
+### Obtener todos los vendedores
+GET http://localhost:5000/Vendedor
+
+### Obtener un vendedor por ID
+GET http://localhost:5000/Vendedor/1
+
+### Crear un nuevo vendedor
+POST http://localhost:5000/Vendedor
+Content-Type: application/json
+
+{
+  "idTdi": 1,
+  "numDocVendedor": "12345678",
+  "nombreVendedor": "Juan Pérez",
+  "ibLider": true,
+  "estado": true
+}
+
+### Actualizar un vendedor existente
+PUT http://localhost:5000/Vendedor/1
+Content-Type: application/json
+
+{
+  "idVendedor": 1,
+  "idTdi": 1,
+  "numDocVendedor": "12345678",
+  "nombreVendedor": "Juan Pérez Actualizado",
+  "ibLider": false,
+  "estado": true
+}
+
+### Eliminar un vendedor
+DELETE http://localhost:5000/Vendedor/1 

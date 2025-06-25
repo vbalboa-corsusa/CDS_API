@@ -1,0 +1,64 @@
+### Obtener todos los pedidos
+GET http://localhost:5000/OrdenPedido
+
+### Obtener un pedido por ID
+GET http://localhost:5000/OrdenPedido/1
+
+### Crear un nuevo pedido
+POST http://localhost:5000/OrdenPedido
+Content-Type: application/json
+
+{
+  "idOpci": 0,
+  "idFp": 1,
+  "idCliente": 1,
+  "idVendedor": 1,
+  "idOpd": 1,
+  "fecRecepcion": "2024-01-01T00:00:00",
+  "fecInicio": "2024-01-02T00:00:00",
+  "fecProcVi": "2024-01-03T00:00:00",
+  "razonSocialCliente": "Cliente de Prueba",
+  "numOp": "OP-001",
+  "idMda": 1,
+  "totalSinIgv": 1000.00,
+  "numRefCliente": "REF-001",
+  "clienteFinal": "Cliente Final",
+  "clienteProveedor": "Proveedor",
+  "vendedor1": "Vendedor 1",
+  "vendedor2": "Vendedor 2",
+  "lider": "Líder",
+  "ubrutaCoti": "UC001",
+  "comisionCompartida": "Comisión",
+  "estado": true
+}
+
+### Actualizar un pedido existente
+PUT http://localhost:5000/OrdenPedido/1
+Content-Type: application/json
+
+{
+  "idOpci": 1,
+  "idFp": 1,
+  "idCliente": 1,
+  "idVendedor": 1,
+  "idOpd": 1,
+  "fecRecepcion": "2024-01-01T00:00:00",
+  "fecInicio": "2024-01-02T00:00:00",
+  "fecProcVi": "2024-01-03T00:00:00",
+  "razonSocialCliente": "Cliente Actualizado",
+  "numOp": "OP-001",
+  "idMda": 1,
+  "totalSinIgv": 2000.00,
+  "numRefCliente": "REF-001",
+  "clienteFinal": "Cliente Final",
+  "clienteProveedor": "Proveedor",
+  "vendedor1": "Vendedor 1",
+  "vendedor2": "Vendedor 2",
+  "lider": "Líder",
+  "ubrutaCoti": "UC001",
+  "comisionCompartida": "Comisión",
+  "estado": true
+}
+
+### Eliminar un pedido
+DELETE http://localhost:5000/OrdenPedido/1 

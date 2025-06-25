@@ -1,0 +1,45 @@
+### Obtener todos los logins
+GET {{baseUrl}}/Login
+Content-Type: application/json
+
+### Obtener login por ID
+GET {{baseUrl}}/Login/1
+Content-Type: application/json
+
+### Obtener login por usuario
+GET {{baseUrl}}/Login/usuario/admin
+Content-Type: application/json
+
+### Validar login (autenticación)
+POST {{baseUrl}}/Login/validate
+Content-Type: application/json
+
+{
+    "usuario": "admin",
+    "password": "123456"
+}
+
+### Crear nuevo login
+POST {{baseUrl}}/Login
+Content-Type: application/json
+
+{
+    "usuario": "nuevo_usuario",
+    "pass": "nueva_password",
+    "estado": true
+}
+
+### Actualizar login
+PUT {{baseUrl}}/Login/1
+Content-Type: application/json
+
+{
+    "idLogin": 1,
+    "usuario": "usuario_actualizado",
+    "pass": "password_actualizada",
+    "estado": true
+}
+
+### Eliminar login (soft delete)
+DELETE {{baseUrl}}/Login/1
+Content-Type: application/json 

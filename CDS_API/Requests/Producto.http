@@ -1,0 +1,49 @@
+### Obtener todos los productos
+GET http://localhost:5000/Producto
+
+### Obtener un producto por ID
+GET http://localhost:5000/Producto/1
+
+### Crear un nuevo producto
+POST http://localhost:5000/Producto
+Content-Type: application/json
+
+{
+  "idMarca": 1,
+  "codComercial1": "C001",
+  "codComercial2": "C002",
+  "codComercial3": "C003",
+  "descripcion": "Producto de prueba",
+  "nomCorto": "Prod1",
+  "idClase": 1,
+  "idSClase": 1,
+  "idSSClase": 1,
+  "idCc": 1,
+  "idScc": 1,
+  "idSscc": 1,
+  "estado": true
+}
+
+### Actualizar un producto existente
+PUT http://localhost:5000/Producto/1
+Content-Type: application/json
+
+{
+  "idProd": 1,
+  "idMarca": 1,
+  "codComercial1": "C001",
+  "codComercial2": "C002",
+  "codComercial3": "C003",
+  "descripcion": "Producto actualizado",
+  "nomCorto": "Prod1",
+  "idClase": 1,
+  "idSClase": 1,
+  "idSSClase": 1,
+  "idCc": 1,
+  "idScc": 1,
+  "idSscc": 1,
+  "estado": true
+}
+
+### Eliminar un producto
+DELETE http://localhost:5000/Producto/1 

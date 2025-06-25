@@ -1,0 +1,10 @@
+namespace CDS_Models.DTOs
+{
+    public class ClaseDTO
+    {
+        public int IdClase { get; set; }
+        public string? Descripcion { get; set; }
+        public string? NomCorto { get; set; }
+        public bool? Estado { get; set; }
+    }
+}
