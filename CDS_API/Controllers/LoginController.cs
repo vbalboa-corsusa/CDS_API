@@ -3,11 +3,13 @@ using CDS_BLL.Interfaces;
 using CDS_Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [SwaggerTag("Gestión de usuario con inicio de sesión")]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService _service;
@@ -18,6 +20,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Obtiene todos los usuarios")]
+        [SwaggerResponse(200, "Lista de usuarios obtenida exitosamente", typeof(IEnumerable<LoginDTO>))]
+        [SwaggerResponse(404, "No se encontraron los usuarios de sesión")]
         public async Task<ActionResult<IEnumerable<LoginDTO>>> GetAll()
         {
             var logins = await _service.GetAllAsync();
@@ -25,6 +30,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Obtiene un usuario por ID")]
+        [SwaggerResponse(200, "Usuario encontrado", typeof(LoginDTO))]
+        [SwaggerResponse(404, "Usuario no encontrado")]
         public async Task<ActionResult<LoginDTO>> GetById(int id)
         {
             var login = await _service.GetByIdAsync(id);
@@ -33,6 +41,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpGet("usuario/{usuario}")]
+        [SwaggerOperation(Summary = "Obtiene un inicio de sesión por usuario")]
+        [SwaggerResponse(200, "Inicio de sesión encontrado", typeof(LoginDTO))]
+        [SwaggerResponse(404, "Inicio de sesión no encontrado")]
         public async Task<ActionResult<LoginDTO>> GetByUsuario(string usuario)
         {
             var login = await _service.GetByUsuarioAsync(usuario);
@@ -41,6 +52,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpPost("validate")]
+        [SwaggerOperation(Summary = "Valida un inicio de sesión")]
+        [SwaggerResponse(200, "Inicio de sesión validado exitosamente", typeof(LoginDTO))]
+        [SwaggerResponse(401, "Credenciales inválidas")]
         public async Task<ActionResult<LoginDTO>> ValidateLogin([FromBody] LoginValidationRequest request)
         {
             var login = await _service.ValidateLoginAsync(request.Usuario, request.Password);
@@ -49,6 +63,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Crea un nuevo inicio de sesión")]
+        [SwaggerResponse(201, "Inicio de sesión creado", typeof(LoginDTO))]
+        [SwaggerResponse(400, "Datos inválidos")]
         public async Task<ActionResult<LoginDTO>> Create(LoginDTO dto)
         {
             var created = await _service.CreateAsync(dto);
@@ -56,6 +73,10 @@ namespace CDS_API.Controllers
         }
 
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Actualiza un inicio de sesión existente")]
+        [SwaggerResponse(204, "Inicio de sesión actualizado")]
+        [SwaggerResponse(400, "ID no coincide")]
+        [SwaggerResponse(404, "Inicio de sesión no encontrado")]
         public async Task<IActionResult> Update(int id, LoginDTO dto)
         {
             if (id != dto.IdLogin) return BadRequest();
@@ -65,6 +86,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Elimina un inicio de sesión")]
+        [SwaggerResponse(204, "Inicio de sesión eliminado")]
+        [SwaggerResponse(404, "Inicio de sesión no encontrado")]
         public async Task<IActionResult> Delete(int id)
         {
             var ok = await _service.DeleteAsync(id);

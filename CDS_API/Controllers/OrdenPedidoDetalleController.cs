@@ -4,6 +4,7 @@ using CDS_DAL;
 using CDS_Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CDS_API.Controllers
 {
@@ -20,6 +21,9 @@ namespace CDS_API.Controllers
 
         // GET: /OrdenPedidoDetalle
         [HttpGet]
+        [SwaggerOperation(Summary = "Obtiene todos los detalles de ordenes de pedido")]
+        [SwaggerResponse(200, "Lista de detalles obtenida exitosamente", typeof(IEnumerable<OrdenPedidoDetalle>))]
+        [SwaggerResponse(404, "No se encontraron detalles de ordenes de pedido")]
         public async Task<ActionResult<IEnumerable<OrdenPedidoDetalle>>> GetAll()
         {
             var detalles = await _context.OrdenesPedidoDetalle
@@ -43,6 +47,9 @@ namespace CDS_API.Controllers
 
         // GET: /OrdenPedidoDetalle/{id}
         [HttpGet("{id}")]
+        [SwaggerOperation(Summary = "Obtiene un detalle de orden de pedido por ID")]
+        [SwaggerResponse(200, "Detalle encontrado", typeof(OrdenPedidoDetalle))]
+        [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<ActionResult<OrdenPedidoDetalle>> GetById(int id)
         {
             var detalle = await _context.OrdenesPedidoDetalle
@@ -68,6 +75,9 @@ namespace CDS_API.Controllers
 
         // POST: /OrdenPedidoDetalle
         [HttpPost]
+        [SwaggerOperation(Summary = "Crea un nuevo detalle de orden de pedido")]
+        [SwaggerResponse(201, "Detalle creado exitosamente", typeof(OrdenPedidoDetalle))]
+        [SwaggerResponse(400, "Solicitud inválida")]
         public async Task<ActionResult<OrdenPedidoDetalle>> Create(OrdenPedidoDetalle detalle)
         {
             _context.OrdenesPedidoDetalle.Add(detalle);
@@ -77,6 +87,10 @@ namespace CDS_API.Controllers
 
         // PUT: /OrdenPedidoDetalle/{id}
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Actualiza un detalle de orden de pedido existente")]
+        [SwaggerResponse(204, "Detalle actualizado exitosamente")]
+        [SwaggerResponse(400, "ID no coincide con el detalle proporcionado")]
+        [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<IActionResult> Update(int id, OrdenPedidoDetalle detalle)
         {
             if (id != detalle.IdOpd)
@@ -98,6 +112,9 @@ namespace CDS_API.Controllers
 
         // DELETE: /OrdenPedidoDetalle/{id}
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Elimina un detalle de orden de pedido por ID")]
+        [SwaggerResponse(204, "Detalle eliminado exitosamente")]
+        [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<IActionResult> Delete(int id)
         {
             var detalle = await _context.OrdenesPedidoDetalle.FindAsync(id);

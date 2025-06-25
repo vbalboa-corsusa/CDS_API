@@ -14,7 +14,15 @@ builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "CDS API",
+        Version = "v1"
+    });
+});
 
 // Add database context
 builder.Services.AddDbContext<LogistContext>(options =>
@@ -42,7 +50,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("v1/swagger.json", "CDS API v1");
+        c.RoutePrefix = "swagger"; // Swagger UI en /swagger
+    });
 }
 
 app.UseHttpsRedirection();
