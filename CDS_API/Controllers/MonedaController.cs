@@ -20,6 +20,9 @@ namespace CDS_API.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Obtiene todas las monedas")]
+        [SwaggerResponse(200, "Lista de monedas obtenida exitosamente", typeof(IEnumerable<Moneda>))]
+        [SwaggerResponse(404, "No se encontraron monedas")]
         public async Task<ActionResult<IEnumerable<Moneda>>> GetMonedas()
         {
             if (_context.Monedas == null)

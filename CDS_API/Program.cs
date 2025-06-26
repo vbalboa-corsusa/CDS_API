@@ -38,7 +38,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins(
+                "http://localhost:3000",
+                "https://cc4d-190-107-182-178.ngrok-free.app"
+                )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });

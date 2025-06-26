@@ -10,6 +10,7 @@ namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [SwaggerTag("Gestión de detalles de pedidos")]
     public class OrdenPedidoDetalleController : ControllerBase
     {
         private readonly LogistContext _context;
