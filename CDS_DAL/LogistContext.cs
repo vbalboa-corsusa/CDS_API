@@ -245,9 +245,9 @@ namespace CDS_DAL
                 entity.Property(e => e.IdClase).HasColumnName("ID_Clase");
                 entity.Property(e => e.IdSClase).HasColumnName("ID_SClase");
                 entity.Property(e => e.IdSSClase).HasColumnName("ID_SSClase");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC");
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC");
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC");
+                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.Marca)
@@ -294,9 +294,9 @@ namespace CDS_DAL
                 entity.Property(e => e.CodComercial).HasColumnName("Cod_Comercial");
                 entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
                 entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC");
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC");
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC");
+                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.CCosto)
@@ -323,9 +323,9 @@ namespace CDS_DAL
                 entity.Property(e => e.CodComercial).HasColumnName("Cod_Comercial");
                 entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
                 entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC");
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC");
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC");
+                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.CCosto)
@@ -445,9 +445,9 @@ namespace CDS_DAL
                 entity.Property(e => e.NumDeal).HasColumnName("NumDeal");
                 entity.Property(e => e.NumServicio).HasColumnName("Num_Servicio");
                 entity.Property(e => e.NumProyecto).HasColumnName("Num_Proyecto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC");
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC");
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC");
+                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Nota1).HasColumnName("Nota1");
                 entity.Property(e => e.Nota2).HasColumnName("Nota2");
                 entity.Property(e => e.Nota3).HasColumnName("Nota3");

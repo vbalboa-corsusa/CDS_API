@@ -80,8 +80,15 @@ namespace CDS_BLL.Services
 
         public async Task<LoginDTO> CreateAsync(LoginDTO dto)
         {
+            // Obtener el máximo IdLogin existente (incluyendo eliminados lógicamente)
+            int maxId = 0;
+            if (await _context.Logins.AnyAsync())
+            {
+                maxId = await _context.Logins.MaxAsync(l => l.IdLogin);
+            }
             var login = new CDS_Models.Login
             {
+                IdLogin = maxId + 1, // Asignar el nuevo Id manualmente
                 Usuario = dto.Usuario,
                 Pass = dto.Pass,
                 Estado = dto.Estado

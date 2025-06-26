@@ -6,7 +6,8 @@ namespace CDS_Models
 {
     public class ScCosto : CCosto
     {
-        public int IdScc { get; set; }
+        [StringLength(16)]
+        public string IdScc { get; set; }
 
         public ICollection<SscCosto>? SscCosto { get; set; }
         public ICollection<Producto>? ProductosScCosto { get; set; }

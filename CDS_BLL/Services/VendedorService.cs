@@ -49,8 +49,15 @@ namespace CDS_BLL.Services
 
         public async Task<VendedorDTO> CreateAsync(VendedorDTO dto)
         {
+            // Obtener el máximo IdVendedor existente (incluyendo eliminados lógicamente)
+            int maxId = 0;
+            if (await _context.Vendedores.AnyAsync())
+            {
+                maxId = await _context.Vendedores.MaxAsync(v => v.IdVendedor);
+            }
             var entity = new Vendedor
             {
+                IdVendedor = maxId + 1, // Asignar el nuevo Id manualmente
                 IdTdi = dto.IdTdi,
                 NumDocVendedor = dto.NumDocVendedor,
                 NombreVendedor = dto.NombreVendedor,

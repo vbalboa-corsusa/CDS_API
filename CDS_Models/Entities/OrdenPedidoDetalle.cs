@@ -51,9 +51,9 @@ namespace CDS_Models.Entities
 
         [StringLength(50)]
         public string? NumProyecto { get; set; }
-        public int? IdCc { get; set; }
-        public int? IdScc { get; set; }
-        public int? IdSscc { get; set; }
+        public string? IdCc { get; set; }
+        public string? IdScc { get; set; }
+        public string? IdSscc { get; set; }
 
         [StringLength(400)]
         public string? Nota1 { get; set; }

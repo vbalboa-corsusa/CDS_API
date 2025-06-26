@@ -14,9 +14,9 @@ namespace CDS_Models.DTOs
         public int? IdClase { get; set; }
         public int? IdSClase { get; set; }
         public int? IdSSClase { get; set; }
-        public int? IdCc { get; set; }
-        public int? IdScc { get; set; }
-        public int? IdSscc { get; set; }
+        public string? IdCc { get; set; }
+        public string? IdScc { get; set; }
+        public string? IdSscc { get; set; }
         public bool? Estado { get; set; }
     }
 }

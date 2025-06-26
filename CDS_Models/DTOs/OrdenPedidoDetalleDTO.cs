@@ -28,9 +28,9 @@ namespace CDS_Models.DTOs
         public string? NumDeal { get; set; }
         public string? NumServicio { get; set; }
         public string? NumProyecto { get; set; }
-        public int? IdCc { get; set; }
-        public int? IdScc { get; set; }
-        public int? IdSscc { get; set; }
+        public string? IdCc { get; set; }
+        public string? IdScc { get; set; }
+        public string? IdSscc { get; set; }
         public string? Nota1 { get; set; }
         public string? Nota2 { get; set; }
         public string? Nota3 { get; set; }

@@ -17,9 +17,9 @@ namespace CDS_Models
 
         [StringLength(10)]
         public string? NomCorto { get; set; }
-        public int? IdCc { get; set; }
-        public int? IdScc { get; set; }
-        public int? IdSscc { get; set; }
+        public string? IdCc { get; set; }
+        public string? IdScc { get; set; }
+        public string? IdSscc { get; set; }
         public bool? Estado { get; set; }
         public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
 
