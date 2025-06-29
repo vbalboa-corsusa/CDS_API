@@ -25,8 +25,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Add database context
+//builder.Services.AddDbContext<LogistContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("BD_LOGIST")));
+var connectionString = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
+    ?? builder.Configuration.GetConnectionString("BD_LOGIST");
+
 builder.Services.AddDbContext<LogistContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BD_LOGIST")));
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<CDS_BLL.Interfaces.IVendedorService, CDS_BLL.Services.VendedorService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.IProductoService, CDS_BLL.Services.ProductoService>();
@@ -38,10 +43,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .WithOrigins(
+            policy.WithOrigins(
                     "http://localhost:3000",
-                    "https://cc4d-190-107-182-178.ngrok-free.app"
+                    "https://f521-38-25-17-121.ngrok-free.app", // Agregar la nueva URL de ngrok
+                    "https://*.netlify.app", // Permitir cualquier subdominio de Netlify
+                    "https://*.netlify.com",  // También permitir netlify.com
+                    "http://localhost:5173", // Puerto de Vite
+                    "https://localhost:5173" // HTTPS
                     )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
@@ -50,27 +58,23 @@ builder.Services.AddCors(options =>
 
 // Para uso del puerto
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7002";
-
-builder.WebHost.ConfigureKestrel(options =>
+builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    options.ListenAnyIP(int.Parse(port));
+    serverOptions.ListenAnyIP(int.Parse(port));
 });
-
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("v1/swagger.json", "CDS API v1");
-        c.RoutePrefix = "swagger"; // Swagger UI en /swagger
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CDS API v1");
+    c.RoutePrefix = "swagger"; // Swagger UI en /swagger
+});
 
-app.UseHttpsRedirection();
+
+//app.UseHttpsRedirection();
 
 // Usar CORS antes de Authorization
 app.UseCors("AllowReactApp");
