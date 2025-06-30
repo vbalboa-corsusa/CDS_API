@@ -49,7 +49,9 @@ builder.Services.AddCors(options =>
                     "https://*.netlify.app", // Permitir cualquier subdominio de Netlify
                     "https://*.netlify.com",  // También permitir netlify.com
                     "http://localhost:5173", // Puerto de Vite
-                    "https://localhost:5173" // HTTPS
+                    "https://localhost:5173",// HTTPS// HTTPS
+                    "http://localhost:5174", // Puerto de Vite
+                    "https://localhost:5174" // HTTPS// HTTPS
                     )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
@@ -77,7 +79,7 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CDS API v1");
     c.RoutePrefix = "swagger"; // Swagger UI en /swagger
-});
+});las
 
 app.UseHttpsRedirection(); // Redirige HTTP a HTTPS
 
