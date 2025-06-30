@@ -45,7 +45,7 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                     "http://localhost:3000",
-                    "https://f521-38-25-17-121.ngrok-free.app", // Agregar la nueva URL de ngrok
+                    "https://cdsapi-production.up.railway.app",
                     "https://*.netlify.app", // Permitir cualquier subdominio de Netlify
                     "https://*.netlify.com",  // También permitir netlify.com
                     "http://localhost:5173", // Puerto de Vite
