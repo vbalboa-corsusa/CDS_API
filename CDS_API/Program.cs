@@ -56,11 +56,17 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Para uso del puerto
-var port = Environment.GetEnvironmentVariable("PORT") ?? "7002";
+// Configuración de Kestrel para HTTP y HTTPS
+var portHttp = 5107;
+var portHttps = 7002;
+
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    serverOptions.ListenAnyIP(int.Parse(port));
+    serverOptions.ListenAnyIP(portHttp); // HTTP
+    serverOptions.ListenAnyIP(portHttps, listenOptions =>
+    {
+        listenOptions.UseHttps(); // HTTPS en 7002
+    });
 });
 
 var app = builder.Build();
@@ -73,8 +79,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger"; // Swagger UI en /swagger
 });
 
-
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Redirige HTTP a HTTPS
 
 // Usar CORS antes de Authorization
 app.UseCors("AllowReactApp");
