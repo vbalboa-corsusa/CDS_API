@@ -79,7 +79,7 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CDS API v1");
     c.RoutePrefix = "swagger"; // Swagger UI en /swagger
-});las
+});
 
 app.UseHttpsRedirection(); // Redirige HTTP a HTTPS
 
