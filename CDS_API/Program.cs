@@ -58,20 +58,22 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Configuración de Kestrel para HTTP y HTTPS
-var portHttp = 5107;
-var portHttps = 7002;
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
+// Configuración de Kestrel para Railway y local
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
 {
-    serverOptions.ListenAnyIP(portHttp); // HTTP
-    serverOptions.ListenAnyIP(portHttps, listenOptions =>
+    builder.WebHost.ConfigureKestrel(serverOptions =>
     {
-        listenOptions.UseHttps(); // HTTPS en 7002
+        serverOptions.ListenAnyIP(int.Parse(port));
     });
-});
+}
 
 var app = builder.Build();
+// Solo redirige a HTTPS en desarrollo local
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // Configure the HTTP request pipeline
 app.UseSwagger();
