@@ -45,6 +45,7 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                     "http://localhost:3000",
+                    "https://cds-clientapp.netlify.app", // Netlify front app
                     "https://cdsapi-production.up.railway.app",
                     "https://*.netlify.app", // Permitir cualquier subdominio de Netlify
                     "https://*.netlify.com",  // También permitir netlify.com
