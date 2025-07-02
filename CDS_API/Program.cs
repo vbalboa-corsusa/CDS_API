@@ -27,7 +27,10 @@ builder.Services.AddSwaggerGen(c =>
 // Add database context
 //builder.Services.AddDbContext<LogistContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("BD_LOGIST")));
-var connectionString = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
+
+// Alterna conexiones
+var connectionString = Environment.GetEnvironmentVariable("CONEXION_LOCAL")
+    ?? Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
     ?? builder.Configuration.GetConnectionString("BD_LOGIST");
 
 builder.Services.AddDbContext<LogistContext>(options =>
