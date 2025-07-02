@@ -20,6 +20,8 @@ namespace CDS_BLL.Services
 
         public async Task<IEnumerable<ClienteDTO>> GetAllAsync()
         {
+            var count = await _context.Clientes.CountAsync();
+            System.Console.WriteLine($"CLIENTE count: {count}"); // Log para Railway
             return await _context.Clientes
                 .Select(c => new ClienteDTO
                 {
