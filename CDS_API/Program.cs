@@ -42,6 +42,7 @@ builder.Services.AddDbContext<LogistContext>(options =>
 builder.Services.AddScoped<CDS_BLL.Interfaces.IVendedorService, CDS_BLL.Services.VendedorService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.IProductoService, CDS_BLL.Services.ProductoService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.ILoginService, CDS_BLL.Services.LoginService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.IClienteService, CDS_BLL.Services.ClienteService>();
 
 // Configuración de CORS
 builder.Services.AddCors(options =>

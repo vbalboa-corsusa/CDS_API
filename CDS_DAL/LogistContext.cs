@@ -111,6 +111,7 @@ namespace CDS_DAL
 
             modelBuilder.Entity<Cliente>(entity =>
             {
+                entity.ToTable("CLIENTE");
                 entity.HasKey(e => e.IdCliente);
 
                 entity.Property(e => e.IdCliente).HasColumnName("ID_Cliente");
