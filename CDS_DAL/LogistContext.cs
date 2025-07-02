@@ -49,11 +49,19 @@ namespace CDS_DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("BD_LOGIST"));
+                var envConn = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL");
+                if (!string.IsNullOrEmpty(envConn))
+                {
+                    optionsBuilder.UseSqlServer(envConn);
+                }
+                else
+                {
+                    IConfigurationRoot configuration = new ConfigurationBuilder()
+                        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                        .AddJsonFile("appsettings.json")
+                        .Build();
+                    optionsBuilder.UseSqlServer(configuration.GetConnectionString("BD_LOGISTICA_LOCAL"));
+                }
             }
         }
 
