@@ -24,14 +24,17 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add database context
-//builder.Services.AddDbContext<LogistContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("BD_LOGIST")));
-
-// Alterna conexiones
-var connectionString = Environment.GetEnvironmentVariable("CONEXION_LOCAL")
-    ?? Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
-    ?? builder.Configuration.GetConnectionString("BD_LOGIST");
+// Lógica para usar BD_LOGISTICA_LOCAL en local, y Railway/Azure en producción
+string connectionString;
+if (builder.Environment.IsDevelopment())
+{
+    connectionString = builder.Configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
+}
+else
+{
+    connectionString = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
+        ?? builder.Configuration.GetConnectionString("BD_LOGIST");
+}
 
 builder.Services.AddDbContext<LogistContext>(options =>
     options.UseSqlServer(connectionString));
