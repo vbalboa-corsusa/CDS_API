@@ -54,8 +54,8 @@ builder.Services.AddCors(options =>
                     "https://*.netlify.com",  // También permitir netlify.com
                     "http://localhost:5173", // Puerto de Vite
                     "https://localhost:5173",// HTTPS// HTTPS
-                    "http://localhost:5174", // Puerto de Vite
-                    "https://localhost:5174" // HTTPS// HTTPS
+                    "http://localhost:5175", // Puerto de Vite
+                    "https://localhost:5175" // HTTPS// HTTPS
                     )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
