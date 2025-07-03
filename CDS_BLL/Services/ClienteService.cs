@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace CDS_BLL.Services
 {
@@ -20,22 +21,30 @@ namespace CDS_BLL.Services
 
         public async Task<IEnumerable<ClienteDTO>> GetAllAsync()
         {
-            var count = await _context.Clientes.CountAsync();
-            System.Console.WriteLine($"CLIENTE count: {count}"); // Log para Railway
-            return await _context.Clientes
-                .Select(c => new ClienteDTO
-                {
-                    IdCliente = c.IdCliente,
-                    IdTdi = c.IdTdi,
-                    RazonSocial = c.RazonSocial,
-                    CorreoCliente = c.CorreoCliente,
-                    NumDocumento = c.NumDocumento,
-                    TelefonoCliente = c.TelefonoCliente,
-                    DireccionCliente = c.DireccionCliente,
-                    IbCltPrv = c.IbCltPrv,
-                    IbCltFinal = c.IbCltFinal
-                })
-                .ToListAsync();
+            try
+            {
+                var count = await _context.Clientes.CountAsync();
+                System.Console.WriteLine($"CLIENTE count: {count}"); // Log para Railway
+                return await _context.Clientes
+                    .Select(c => new ClienteDTO
+                    {
+                        IdCliente = c.IdCliente,
+                        IdTdi = c.IdTdi,
+                        RazonSocial = c.RazonSocial,
+                        CorreoCliente = c.CorreoCliente,
+                        NumDocumento = c.NumDocumento,
+                        TelefonoCliente = c.TelefonoCliente,
+                        DireccionCliente = c.DireccionCliente,
+                        IbCltPrv = c.IbCltPrv,
+                        IbCltFinal = c.IbCltFinal
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"ERROR en GetAllAsync CLIENTE: {ex.Message}\n{ex.StackTrace}");
+                throw; // Para que el controlador devuelva 500 y se vea el error en Railway
+            }
         }
 
         public async Task<ClienteDTO?> GetByIdAsync(int id)
