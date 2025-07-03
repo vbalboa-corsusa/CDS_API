@@ -20,9 +20,9 @@ namespace CDS_BLL.Services
 
         public async Task<IEnumerable<ClienteDTO>> GetAllAsync()
         {
-            var count = await _context.Clientes.CountAsync();
+            var count = await _context.CLIENTE.CountAsync();
             System.Console.WriteLine($"CLIENTE count: {count}"); // Log para Railway
-            return await _context.Clientes
+            return await _context.CLIENTE
                 .Select(c => new ClienteDTO
                 {
                     IdCliente = c.IdCliente,
@@ -40,7 +40,7 @@ namespace CDS_BLL.Services
 
         public async Task<ClienteDTO?> GetByIdAsync(int id)
         {
-            var c = await _context.Clientes.FindAsync(id);
+            var c = await _context.CLIENTE.FindAsync(id);
             if (c == null) return null;
             return new ClienteDTO
             {
@@ -69,7 +69,7 @@ namespace CDS_BLL.Services
                 IbCltPrv = dto.IbCltPrv,
                 IbCltFinal = dto.IbCltFinal
             };
-            _context.Clientes.Add(entity);
+            _context.CLIENTE.Add(entity);
             await _context.SaveChangesAsync();
             dto.IdCliente = entity.IdCliente;
             return dto;
@@ -77,7 +77,7 @@ namespace CDS_BLL.Services
 
         public async Task<bool> UpdateAsync(int id, ClienteDTO dto)
         {
-            var entity = await _context.Clientes.FindAsync(id);
+            var entity = await _context.CLIENTE.FindAsync(id);
             if (entity == null) return false;
             entity.IdTdi = dto.IdTdi;
             entity.RazonSocial = dto.RazonSocial;
@@ -93,9 +93,9 @@ namespace CDS_BLL.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _context.Clientes.FindAsync(id);
+            var entity = await _context.CLIENTE.FindAsync(id);
             if (entity == null) return false;
-            _context.Clientes.Remove(entity);
+            _context.CLIENTE.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
         }
