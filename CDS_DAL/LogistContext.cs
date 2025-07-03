@@ -49,10 +49,14 @@ namespace CDS_DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var envConn = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL");
+                var envConn = Environment.GetEnvironmentVariable("RAILWAY_DB_URL");
                 if (!string.IsNullOrEmpty(envConn))
                 {
-                    optionsBuilder.UseSqlServer(envConn);
+                    optionsBuilder.UseSqlServer(envConn, sqlOptions =>
+                    {
+                        sqlOptions.CommandTimeout(3600);
+                        sqlOptions.EnableRetryOnFailure();
+                    });
                 }
                 else
                 {
@@ -60,7 +64,12 @@ namespace CDS_DAL
                         .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                         .AddJsonFile("appsettings.json")
                         .Build();
-                    optionsBuilder.UseSqlServer(configuration.GetConnectionString("BD_LOGISTICA_LOCAL"));
+                    var localConn = configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
+                    optionsBuilder.UseSqlServer(localConn, sqlOptions =>
+                    {
+                        sqlOptions.CommandTimeout(3600);
+                        sqlOptions.EnableRetryOnFailure();
+                    });
                 }
             }
         }
