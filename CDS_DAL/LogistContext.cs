@@ -424,6 +424,16 @@ namespace CDS_DAL
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
+            modelBuilder.Entity<Moneda>(entity =>
+            {
+                entity.ToTable("MONEDAS");
+                entity.HasKey(e => e.IdMda);
+                entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
+                entity.Property(e => e.Nombre).HasColumnName("Nombre");
+                entity.Property(e => e.EquivSunat).HasColumnName("EquivSunat");
+                entity.Property(e => e.Estado).HasColumnName("Estado");
+            });
+
             modelBuilder.Entity<Clase>()
                 .HasDiscriminator<string>("DiscriminatorClase")
                 .HasValue<Clase>("Clase")
