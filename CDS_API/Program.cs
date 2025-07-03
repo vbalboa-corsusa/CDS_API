@@ -32,8 +32,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    connectionString = Environment.GetEnvironmentVariable("RAILWAY_DATABASE_URL")
-        ?? builder.Configuration.GetConnectionString("BD_LOGIST");
+    connectionString = Environment.GetEnvironmentVariable("RAILWAY_DB_URL");
 }
 
 builder.Services.AddDbContext<LogistContext>(options =>
