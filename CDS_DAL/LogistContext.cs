@@ -50,6 +50,7 @@ namespace CDS_DAL
             if (!optionsBuilder.IsConfigured)
             {
                 var envConn = Environment.GetEnvironmentVariable("RAILWAY_DB_URL");
+                System.Console.WriteLine($"[DEBUG] RAILWAY_DB_URL: {(string.IsNullOrEmpty(envConn) ? "NO DEFINIDA" : "DEFINIDA")}");
                 if (!string.IsNullOrEmpty(envConn))
                 {
                     optionsBuilder.UseSqlServer(envConn, sqlOptions =>
