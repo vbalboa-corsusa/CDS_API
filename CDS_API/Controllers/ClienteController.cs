@@ -36,7 +36,6 @@ namespace CDS_API.Controllers
             {
                 System.Console.WriteLine($"[ERROR] GET /Cliente: {ex.Message}\n{ex.StackTrace}");
                 return StatusCode(500, $"Error interno: {ex.Message}");
-                throw;
             }
         }
 

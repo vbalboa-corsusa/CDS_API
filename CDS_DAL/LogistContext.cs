@@ -48,11 +48,11 @@ namespace CDS_DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var envConn = Environment.GetEnvironmentVariable("RAILWAY_DB_URL");
-                System.Console.WriteLine($"[DEBUG] RAILWAY_DB_URL: {(string.IsNullOrEmpty(envConn) ? "NO DEFINIDA" : "DEFINIDA")}");
-                if (!string.IsNullOrEmpty(envConn))
+                var conn = Environment.GetEnvironmentVariable("RAILWAY_BASE_URL");
+                if (!string.IsNullOrEmpty(conn))
                 {
-                    optionsBuilder.UseSqlServer(envConn, sqlOptions =>
+                    System.Console.WriteLine("[DEBUG] Usando RAILWAY_BASE_URL");
+                    optionsBuilder.UseSqlServer(conn, sqlOptions =>
                     {
                         sqlOptions.CommandTimeout(3600);
                         sqlOptions.EnableRetryOnFailure();
@@ -60,16 +60,8 @@ namespace CDS_DAL
                 }
                 else
                 {
-                    IConfigurationRoot configuration = new ConfigurationBuilder()
-                        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                        .AddJsonFile("appsettings.json")
-                        .Build();
-                    var localConn = configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
-                    optionsBuilder.UseSqlServer(localConn, sqlOptions =>
-                    {
-                        sqlOptions.CommandTimeout(3600);
-                        sqlOptions.EnableRetryOnFailure();
-                    });
+                    System.Console.WriteLine("[ERROR] No se encontró la variable de entorno RAILWAY_BASE_URL para la cadena de conexión");
+                    throw new InvalidOperationException("No se encontró la variable de entorno RAILWAY_BASE_URL para la cadena de conexión");
                 }
             }
         }
