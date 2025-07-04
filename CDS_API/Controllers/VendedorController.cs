@@ -23,13 +23,16 @@ namespace CDS_API.Controllers
         [SwaggerResponse(200, "Lista de vendedores obtenida exitosamente", typeof(IEnumerable<VendedorDTO>))]
         public async Task<ActionResult<IEnumerable<VendedorDTO>>> GetAll()
         {
+            System.Console.WriteLine("[LOG] GET /Vendedor llamado");
             try
             {
                 var vendedores = await _service.GetAllAsync();
+                System.Console.WriteLine($"[LOG] Vendedores encontrados: {vendedores.Count()}");
                 return Ok(vendedores);
             }
             catch (Exception ex)
             {
+                System.Console.WriteLine($"[ERROR] GET /Vendedor: {ex.Message}\n{ex.StackTrace}");
                 // Loguea el error en consola (Railway lo mostrará en los logs)
                 Console.WriteLine("ERROR EN /Vendedor: " + ex.ToString());
                 return StatusCode(500, ex.Message);

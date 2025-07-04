@@ -9,7 +9,7 @@ namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [SwaggerTag("Gestión de monedas")]
+    [SwaggerTag("GestiÃ³n de monedas")]
     public class MonedaController : ControllerBase
     {
         private readonly LogistContext _context;
@@ -25,11 +25,23 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "No se encontraron monedas")]
         public async Task<ActionResult<IEnumerable<Moneda>>> GetMonedas()
         {
-            if (_context.Monedas == null)
+            System.Console.WriteLine("[LOG] GET /Moneda llamado");
+            try
             {
-                return NotFound();
+                if (_context.Monedas == null)
+                {
+                    System.Console.WriteLine("[LOG] _context.Monedas es null");
+                    return NotFound();
+                }
+                var monedas = await _context.Monedas.ToListAsync();
+                System.Console.WriteLine($"[LOG] Monedas encontradas: {monedas.Count}");
+                return monedas;
             }
-            return await _context.Monedas.ToListAsync();
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /Moneda: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
     }
 }

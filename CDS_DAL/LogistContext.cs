@@ -29,7 +29,6 @@ namespace CDS_DAL
         public  DbSet<SubSubTiposNegocio> SubSubTiposNegocio { get; set; }
         public  DbSet<StatusOp> StatusOp { get; set; }
         public  DbSet<FormaPago> FormaPago { get; set; }
-        public  DbSet<CatFormaPago> CatFormaPago { get; set; }
         public  DbSet<UnidadMedida> UnidadesMedida { get; set; }
         public  DbSet<ProdUm> ProdUm { get; set; }
         public  DbSet<TcUsd> TcUsd { get; set; }
@@ -106,11 +105,6 @@ namespace CDS_DAL
                 entity.Property(e => e.ComisionCompartida).HasColumnName("ComisionCompartida");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
-                entity.HasOne(d => d.FormaPago)
-                    .WithMany(p => p.OrdenPedido)
-                    .HasForeignKey(d => d.IdFp)
-                    .HasConstraintName("FK_ORDENPEDIDO_FORMAPAGO");
-
                 entity.HasOne(d => d.Cliente)
                     .WithMany(p => p.OrdenPedido)
                     .HasForeignKey(d => d.IdCliente)
@@ -122,9 +116,14 @@ namespace CDS_DAL
                     .HasConstraintName("FK_ORDENPEDIDO_VENDEDORES");
 
                 entity.HasOne(d => d.Moneda)
-                    .WithMany(p => p.OrdenPedido)
+                    .WithMany()
                     .HasForeignKey(d => d.IdMda)
                     .HasConstraintName("FK_ORDENPEDIDO_MONEDAS");
+
+                entity.HasOne(d => d.FormaPago)
+                    .WithMany(p => p.OrdenesPedido)
+                    .HasForeignKey(d => d.IdFp)
+                    .HasConstraintName("FK_ORDENPEDIDO_FORMAPAGO");
             });
 
             modelBuilder.Entity<Cliente>(entity =>
@@ -199,18 +198,14 @@ namespace CDS_DAL
 
             modelBuilder.Entity<FormaPago>(entity =>
             {
+                entity.ToTable("FORMA_PAGO");
                 entity.HasKey(e => e.IdFp);
-
                 entity.Property(e => e.IdFp).HasColumnName("ID_FP");
                 entity.Property(e => e.IdCfp).HasColumnName("ID_CFP");
                 entity.Property(e => e.DescripcionFp).HasColumnName("DescripcionFP");
                 entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
-
-                entity.HasOne(d => d.CatFormaPago)
-                    .WithMany(p => p.FormaPago)
-                    .HasForeignKey(d => d.IdCfp)
-                    .HasConstraintName("FK_FORMAPAGO_CFORMAPAGO");
+                // No navegación ni referencia a CatFormaPago
             });
 
             modelBuilder.Entity<ProdUm>(entity =>
@@ -245,7 +240,7 @@ namespace CDS_DAL
                 entity.Property(e => e.TipCam).HasColumnName("TipCam");
 
                 entity.HasOne(d => d.Moneda)
-                    .WithMany(p => p.TcUsd)
+                    .WithMany()
                     .HasForeignKey(d => d.IdMda)
                     .HasConstraintName("FK_TCUSD_MONEDAS");
             });
@@ -404,16 +399,6 @@ namespace CDS_DAL
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
-            modelBuilder.Entity<CatFormaPago>(entity =>
-            {
-                entity.HasKey(e => e.IdCfp);
-
-                entity.Property(e => e.IdCfp).HasColumnName("ID_CFP");
-                entity.Property(e => e.DescripcionCfp).HasColumnName("DescripcionCFP");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.Estado).HasColumnName("Estado");
-            });
-
             modelBuilder.Entity<UnidadMedida>(entity =>
             {
                 entity.HasKey(e => e.IdUm);
@@ -430,7 +415,7 @@ namespace CDS_DAL
                 entity.HasKey(e => e.IdMda);
                 entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
                 entity.Property(e => e.Nombre).HasColumnName("Nombre");
-                entity.Property(e => e.EquivSunat).HasColumnName("EquivSunat");
+                entity.Property(e => e.Equiv_Sunat).HasColumnName("Equiv_Sunat");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
@@ -524,7 +509,7 @@ namespace CDS_DAL
                     .HasConstraintName("FK_OPDETALLE_UNIDADMEDIDA");
 
                 entity.HasOne(d => d.Moneda)
-                    .WithMany(p => p.OrdenPedidoDetalle)
+                    .WithMany()
                     .HasForeignKey(d => d.IdMda)
                     .HasConstraintName("FK_OPDETALLE_MONEDAS");
 

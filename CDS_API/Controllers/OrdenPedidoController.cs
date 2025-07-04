@@ -5,12 +5,15 @@ using CDS_Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
+using CDS_Models.DTOs;
 
 namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [SwaggerTag("Gesti髇 de 髍denes de pedido")]
+    [SwaggerTag("Gesti贸nn de 贸rdenes de pedido")]
     public class OrdenPedidoController : ControllerBase
     {
         private readonly LogistContext _context;
@@ -22,19 +25,28 @@ namespace CDS_API.Controllers
 
         // GET: /OrdenPedido
         [HttpGet]
-        [SwaggerOperation(Summary = "Obtiene todas las 髍denes de pedido")]
-        [SwaggerResponse(200, "Lista de 髍denes de pedido obtenida exitosamente", typeof(IEnumerable<OrdenPedido>))]
-        [SwaggerResponse(404, "No se encontraron 髍denes de pedido")]
+        [SwaggerOperation(Summary = "Obtiene todas las 贸rdenes de pedido")]
+        [SwaggerResponse(200, "Lista de 贸rdenes de pedido obtenida exitosamente", typeof(IEnumerable<OrdenPedido>))]
+        [SwaggerResponse(404, "No se encontraron 贸rdenes de pedido")]
         public async Task<ActionResult<IEnumerable<OrdenPedido>>> GetAll()
         {
-            var pedidos = await _context.OrdenPedido
-                .Include(x => x.FormaPago)
-                .Include(x => x.Cliente)
-                .Include(x => x.Vendedor)
-                .Include(x => x.Moneda)
-                .Include(x => x.OrdenPedidoDetalles)
-                .ToListAsync();
-            return Ok(pedidos);
+            System.Console.WriteLine("[LOG] GET /OrdenPedido llamado");
+            try
+            {
+                var pedidos = await _context.OrdenPedido
+                    .Include(x => x.Cliente)
+                    .Include(x => x.Vendedor)
+                    .Include(x => x.Moneda)
+                    .Include(x => x.OrdenPedidoDetalles)
+                    .ToListAsync();
+                System.Console.WriteLine($"[LOG] Ordenes de pedido encontradas: {pedidos.Count}");
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /OrdenPedido: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         // GET: /OrdenPedido/{id}
@@ -45,7 +57,6 @@ namespace CDS_API.Controllers
         public async Task<ActionResult<OrdenPedido>> GetById(int id)
         {
             var pedido = await _context.OrdenPedido
-                .Include(x => x.FormaPago)
                 .Include(x => x.Cliente)
                 .Include(x => x.Vendedor)
                 .Include(x => x.Moneda)
@@ -60,7 +71,7 @@ namespace CDS_API.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Crea una nueva orden de pedido")]
         [SwaggerResponse(201, "Orden de pedido creada exitosamente", typeof(OrdenPedido))]
-        [SwaggerResponse(400, "Datos inv醠idos")]
+        [SwaggerResponse(400, "Datos inv锟絣idos")]
         public async Task<ActionResult<OrdenPedido>> Create(OrdenPedido pedido)
         {
             _context.OrdenPedido.Add(pedido);

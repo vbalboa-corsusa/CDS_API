@@ -5,12 +5,15 @@ using CDS_Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
+using CDS_Models.DTOs;
 
 namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [SwaggerTag("GestiÛn de detalles de pedidos")]
+    [SwaggerTag("Gesti√≥n de detalles de pedidos")]
     public class OrdenPedidoDetalleController : ControllerBase
     {
         private readonly LogistContext _context;
@@ -27,23 +30,33 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "No se encontraron detalles de ordenes de pedido")]
         public async Task<ActionResult<IEnumerable<OrdenPedidoDetalle>>> GetAll()
         {
-            var detalles = await _context.OrdenesPedidoDetalle
-                .Include(x => x.Producto)
-                .Include(x => x.Servicio)
-                .Include(x => x.Proyecto)
-                .Include(x => x.UnidadMedida)
-                .Include(x => x.Moneda)
-                .Include(x => x.TcUsd)
-                .Include(x => x.CCosto)
-                .Include(x => x.ScCosto)
-                .Include(x => x.SscCosto)
-                .Include(x => x.OrdenPedido)
-                .Include(x => x.SubSubTiposNegocio)
-                .Include(x => x.SubTiposNegocio)
-                .Include(x => x.TiposNegocio)
-                .Include(x => x.StatusOp)
-                .ToListAsync();
-            return Ok(detalles);
+            System.Console.WriteLine("[LOG] GET /OrdenPedidoDetalle llamado");
+            try
+            {
+                var detalles = await _context.OrdenesPedidoDetalle
+                    .Include(x => x.Producto)
+                    .Include(x => x.Servicio)
+                    .Include(x => x.Proyecto)
+                    .Include(x => x.UnidadMedida)
+                    .Include(x => x.Moneda)
+                    .Include(x => x.TcUsd)
+                    .Include(x => x.CCosto)
+                    .Include(x => x.ScCosto)
+                    .Include(x => x.SscCosto)
+                    .Include(x => x.OrdenPedido)
+                    .Include(x => x.SubSubTiposNegocio)
+                    .Include(x => x.SubTiposNegocio)
+                    .Include(x => x.TiposNegocio)
+                    .Include(x => x.StatusOp)
+                    .ToListAsync();
+                System.Console.WriteLine($"[LOG] Ordenes de pedido detalle encontradas: {detalles.Count}");
+                return Ok(detalles);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /OrdenPedidoDetalle: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         // GET: /OrdenPedidoDetalle/{id}
@@ -53,37 +66,60 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<ActionResult<OrdenPedidoDetalle>> GetById(int id)
         {
-            var detalle = await _context.OrdenesPedidoDetalle
-                .Include(x => x.Producto)
-                .Include(x => x.Servicio)
-                .Include(x => x.Proyecto)
-                .Include(x => x.UnidadMedida)
-                .Include(x => x.Moneda)
-                .Include(x => x.TcUsd)
-                .Include(x => x.CCosto)
-                .Include(x => x.ScCosto)
-                .Include(x => x.SscCosto)
-                .Include(x => x.OrdenPedido)
-                .Include(x => x.SubSubTiposNegocio)
-                .Include(x => x.SubTiposNegocio)
-                .Include(x => x.TiposNegocio)
-                .Include(x => x.StatusOp)
-                .FirstOrDefaultAsync(x => x.IdOpd == id);
-            if (detalle == null)
-                return NotFound();
-            return Ok(detalle);
+            System.Console.WriteLine($"[LOG] GET /OrdenPedidoDetalle/{id} llamado");
+            try
+            {
+                var detalle = await _context.OrdenesPedidoDetalle
+                    .Include(x => x.Producto)
+                    .Include(x => x.Servicio)
+                    .Include(x => x.Proyecto)
+                    .Include(x => x.UnidadMedida)
+                    .Include(x => x.Moneda)
+                    .Include(x => x.TcUsd)
+                    .Include(x => x.CCosto)
+                    .Include(x => x.ScCosto)
+                    .Include(x => x.SscCosto)
+                    .Include(x => x.OrdenPedido)
+                    .Include(x => x.SubSubTiposNegocio)
+                    .Include(x => x.SubTiposNegocio)
+                    .Include(x => x.TiposNegocio)
+                    .Include(x => x.StatusOp)
+                    .FirstOrDefaultAsync(x => x.IdOpd == id);
+                if (detalle == null)
+                {
+                    System.Console.WriteLine($"[LOG] Detalle con ID {id} no encontrado");
+                    return NotFound();
+                }
+                System.Console.WriteLine($"[LOG] Detalle con ID {id} encontrado");
+                return Ok(detalle);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /OrdenPedidoDetalle/{id}: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         // POST: /OrdenPedidoDetalle
         [HttpPost]
         [SwaggerOperation(Summary = "Crea un nuevo detalle de orden de pedido")]
         [SwaggerResponse(201, "Detalle creado exitosamente", typeof(OrdenPedidoDetalle))]
-        [SwaggerResponse(400, "Solicitud inv·lida")]
+        [SwaggerResponse(400, "Solicitud inv√°lida")]
         public async Task<ActionResult<OrdenPedidoDetalle>> Create(OrdenPedidoDetalle detalle)
         {
-            _context.OrdenesPedidoDetalle.Add(detalle);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = detalle.IdOpd }, detalle);
+            System.Console.WriteLine("[LOG] POST /OrdenPedidoDetalle llamado");
+            try
+            {
+                _context.OrdenesPedidoDetalle.Add(detalle);
+                await _context.SaveChangesAsync();
+                System.Console.WriteLine($"[LOG] Detalle con ID {detalle.IdOpd} creado");
+                return CreatedAtAction(nameof(GetById), new { id = detalle.IdOpd }, detalle);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] POST /OrdenPedidoDetalle: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         // PUT: /OrdenPedidoDetalle/{id}
@@ -94,19 +130,35 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<IActionResult> Update(int id, OrdenPedidoDetalle detalle)
         {
+            System.Console.WriteLine($"[LOG] PUT /OrdenPedidoDetalle/{id} llamado");
             if (id != detalle.IdOpd)
+            {
+                System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: ID no coincide con el detalle proporcionado");
                 return BadRequest();
+            }
             _context.Entry(detalle).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
+                System.Console.WriteLine($"[LOG] Detalle con ID {id} actualizado");
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!await _context.OrdenesPedidoDetalle.AnyAsync(x => x.IdOpd == id))
+                {
+                    System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: Detalle no encontrado");
                     return NotFound();
+                }
                 else
+                {
+                    System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: Error de concurrencia de datos");
                     throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: {ex.Message}\n{ex.StackTrace}");
+                throw;
             }
             return NoContent();
         }
@@ -118,12 +170,25 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "Detalle no encontrado")]
         public async Task<IActionResult> Delete(int id)
         {
-            var detalle = await _context.OrdenesPedidoDetalle.FindAsync(id);
-            if (detalle == null)
-                return NotFound();
-            _context.OrdenesPedidoDetalle.Remove(detalle);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            System.Console.WriteLine($"[LOG] DELETE /OrdenPedidoDetalle/{id} llamado");
+            try
+            {
+                var detalle = await _context.OrdenesPedidoDetalle.FindAsync(id);
+                if (detalle == null)
+                {
+                    System.Console.WriteLine($"[LOG] Detalle con ID {id} no encontrado para eliminar");
+                    return NotFound();
+                }
+                _context.OrdenesPedidoDetalle.Remove(detalle);
+                await _context.SaveChangesAsync();
+                System.Console.WriteLine($"[LOG] Detalle con ID {id} eliminado");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] DELETE /OrdenPedidoDetalle/{id}: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
     }
-} 
+}

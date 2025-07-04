@@ -4,6 +4,8 @@ using CDS_Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
 
 namespace CDS_API.Controllers
 {
@@ -23,8 +25,18 @@ namespace CDS_API.Controllers
         [SwaggerResponse(200, "Lista de clientes obtenida exitosamente", typeof(IEnumerable<ClienteDTO>))]
         public async Task<ActionResult<IEnumerable<ClienteDTO>>> GetAll()
         {
-            var clientes = await _service.GetAllAsync();
-            return Ok(clientes);
+            System.Console.WriteLine("[LOG] GET /Cliente llamado");
+            try
+            {
+                var clientes = await _service.GetAllAsync();
+                System.Console.WriteLine($"[LOG] Clientes encontrados: {clientes.Count()}");
+                return Ok(clientes);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /Cliente: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         [HttpGet("{id}")]

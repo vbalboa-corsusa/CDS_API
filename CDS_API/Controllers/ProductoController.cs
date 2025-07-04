@@ -4,12 +4,14 @@ using CDS_Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
 
 namespace CDS_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [SwaggerTag("Gestión de productos")]
+    [SwaggerTag("GestiÃ³n de productos")]
     public class ProductoController : ControllerBase
     {
         private readonly IProductoService _service;
@@ -24,8 +26,18 @@ namespace CDS_API.Controllers
         [SwaggerResponse(404, "No se encontraron productos")]
         public async Task<ActionResult<IEnumerable<ProductoDTO>>> GetAll()
         {
-            var productos = await _service.GetAllAsync();
-            return Ok(productos);
+            System.Console.WriteLine("[LOG] GET /Producto llamado");
+            try
+            {
+                var productos = await _service.GetAllAsync();
+                System.Console.WriteLine($"[LOG] Productos encontrados: {productos.Count()}");
+                return Ok(productos);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"[ERROR] GET /Producto: {ex.Message}\n{ex.StackTrace}");
+                throw;
+            }
         }
 
         [HttpGet("{id}")]
@@ -42,7 +54,7 @@ namespace CDS_API.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Crea un nuevo producto")]
         [SwaggerResponse(201, "Producto creado", typeof(ProductoDTO))]
-        [SwaggerResponse(400, "Datos inválidos")]
+        [SwaggerResponse(400, "Datos invï¿½lidos")]
         public async Task<ActionResult<ProductoDTO>> Create(ProductoDTO dto)
         {
             var created = await _service.CreateAsync(dto);
@@ -72,4 +84,4 @@ namespace CDS_API.Controllers
             return NoContent();
         }
     }
-} 
+}

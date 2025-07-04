@@ -13,11 +13,7 @@ namespace CDS_Models
         public string? Nombre { get; set; }
 
         [StringLength(5)]
-        public string? EquivSunat { get; set; }
+        public string? Equiv_Sunat { get; set; }
         public bool? Estado { get; set; }
-
-        public ICollection<CDS_Models.Entities.OrdenPedido>? OrdenPedido { get; set; }
-        public ICollection<TcUsd>? TcUsd { get; set; }
-        public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
     }
 }
