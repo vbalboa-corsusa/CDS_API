@@ -75,6 +75,9 @@ if (!string.IsNullOrEmpty(port))
     });
 }
 
+var railwayConn = Environment.GetEnvironmentVariable("RAILWAY_BASE_URL");
+Console.WriteLine($"[DEBUG][Program.cs] RAILWAY_BASE_URL: {(string.IsNullOrEmpty(railwayConn) ? "NO DEFINIDA" : "DEFINIDA")}");
+
 var app = builder.Build();
 // Solo redirige a HTTPS en desarrollo local
 if (app.Environment.IsDevelopment())
