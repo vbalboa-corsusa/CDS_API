@@ -23,7 +23,7 @@ namespace CDS_Models.DTOs
         public string? Vendedor2 { get; set; }
         public string? Lider { get; set; }
         public string? UbrutaCoti { get; set; }
-        public string? ComisionCompartida { get; set; }
+        public bool? ComisionCompartida { get; set; }
         public bool? Estado { get; set; }
     }
 }

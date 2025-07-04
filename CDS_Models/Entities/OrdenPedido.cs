@@ -47,8 +47,7 @@ public class OrdenPedido
         [StringLength(10)]
         public string? UbrutaCoti { get; set; }
 
-        [StringLength(50)]
-        public string? ComisionCompartida { get; set; }
+        public bool? ComisionCompartida { get; set; }
         public bool? Estado { get; set; }
 
         [ForeignKey("IdFp")]
