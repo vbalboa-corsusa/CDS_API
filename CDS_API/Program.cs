@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var renderConn = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+Console.WriteLine($"[DEBUG][Program.cs] CONNECTION_STRING (Render): {(string.IsNullOrEmpty(renderConn) ? "NO DEFINIDA" : "DEFINIDA")}");
+
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true);
@@ -35,8 +38,18 @@ else
     connectionString = Environment.GetEnvironmentVariable("RAILWAY_DB_URL");
 }
 
-builder.Services.AddDbContext<LogistContext>(options =>
-    options.UseSqlServer(connectionString));
+if (!string.IsNullOrEmpty(renderConn))
+{
+    builder.Services.AddDbContext<CDS_DAL.LogistContext>(options =>
+        options.UseSqlServer(renderConn));
+}
+else
+{
+    // Usar la configuración local (appsettings.json)
+    var localConn = builder.Configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
+    builder.Services.AddDbContext<CDS_DAL.LogistContext>(options =>
+        options.UseSqlServer(localConn));
+}
 
 builder.Services.AddScoped<CDS_BLL.Interfaces.IVendedorService, CDS_BLL.Services.VendedorService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.IProductoService, CDS_BLL.Services.ProductoService>();
@@ -75,8 +88,6 @@ if (!string.IsNullOrEmpty(port))
     });
 }
 
-var renderConn = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-Console.WriteLine($"[DEBUG][Program.cs] CONNECTION_STRING (Render): {(string.IsNullOrEmpty(renderConn) ? "NO DEFINIDA" : "DEFINIDA")}");
 
 var app = builder.Build();
 // Solo redirige a HTTPS en desarrollo local
