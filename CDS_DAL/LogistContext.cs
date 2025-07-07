@@ -48,10 +48,10 @@ namespace CDS_DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var conn = Environment.GetEnvironmentVariable("RAILWAY_BASE_URL");
+                var conn = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 if (!string.IsNullOrEmpty(conn))
                 {
-                    System.Console.WriteLine("[DEBUG] Usando RAILWAY_BASE_URL");
+                    System.Console.WriteLine("[DEBUG] Usando CONNECTION_STRING");
                     optionsBuilder.UseSqlServer(conn, sqlOptions =>
                     {
                         sqlOptions.CommandTimeout(3600);
@@ -60,8 +60,8 @@ namespace CDS_DAL
                 }
                 else
                 {
-                    System.Console.WriteLine("[ERROR] No se encontró la variable de entorno RAILWAY_BASE_URL para la cadena de conexión");
-                    throw new InvalidOperationException("No se encontró la variable de entorno RAILWAY_BASE_URL para la cadena de conexión");
+                    System.Console.WriteLine("[ERROR] No se encontró la variable de entorno CONNECTION_STRING para la cadena de conexión");
+                    throw new InvalidOperationException("No se encontró la variable de entorno CONNECTION_STRING para la cadena de conexión");
                 }
             }
         }
