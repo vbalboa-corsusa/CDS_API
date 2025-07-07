@@ -64,14 +64,14 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins(
                     "http://localhost:3000",
-                    "https://cds-clientapp.netlify.app", // Netlify front app
-                    "https://cdsapi-production.up.railway.app",
-                    "https://*.netlify.app", // Permitir cualquier subdominio de Netlify
+                    "https://cds-clientapp.netlify.app", // Netlify principal
+                    "https://cds-api.onrender.com", // Dominio del backend en Render
+                    "https://*.netlify.app", // Subdominios de Netlify
                     "https://*.netlify.com",  // También permitir netlify.com
                     "http://localhost:5173", // Puerto de Vite
-                    "https://localhost:5173",// HTTPS// HTTPS
-                    "http://localhost:5175", // Puerto de Vite
-                    "https://localhost:5175" // HTTPS// HTTPS
+                    "https://localhost:5173",
+                    "http://localhost:5175",
+                    "https://localhost:5175"
                     )
                   .AllowAnyHeader()
                   .AllowAnyMethod();
