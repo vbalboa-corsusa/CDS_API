@@ -426,6 +426,7 @@ namespace CDS_DAL
 
             modelBuilder.Entity<OrdenPedidoDetalle>(entity =>
             {
+                entity.ToTable("ORDEN_PEDIDO_DETALLE");
                 entity.HasKey(e => e.IdOpd);
 
                 entity.Property(e => e.IdOpd).HasColumnName("ID_OPD");
