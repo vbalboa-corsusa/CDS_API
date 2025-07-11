@@ -430,6 +430,7 @@ namespace CDS_DAL
                 entity.HasKey(e => e.IdOpd);
 
                 entity.Property(e => e.IdOpd).HasColumnName("ID_OPD");
+                entity.Property(e => e.IdOpci).HasColumnName("ID_OPCI");
                 entity.Property(e => e.IdStatus).HasColumnName("ID_Status");
                 entity.Property(e => e.IdTn).HasColumnName("ID_TN");
                 entity.Property(e => e.IdStn).HasColumnName("ID_STN");
