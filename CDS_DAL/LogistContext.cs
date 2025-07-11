@@ -73,6 +73,7 @@ namespace CDS_DAL
 
             modelBuilder.Entity<OrdenPedido>(entity =>
             {
+                entity.ToTable("ORDEN_PEDIDO");
                 entity.HasKey(e => e.IdOpci);
 
                 entity.Property(e => e.IdOpci).HasColumnName("ID_OPCI");
