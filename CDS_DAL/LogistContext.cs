@@ -87,7 +87,7 @@ namespace CDS_DAL
                 entity.Property(e => e.RazonSocialCliente).HasColumnName("RazonSocialCliente");
                 entity.Property(e => e.NumOp).HasColumnName("NumOP");
                 entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
-                entity.Property(e => e.TotalSinIgv).HasColumnName("TotalSinIGV");
+                entity.Property(e => e.TotalSinIgv).HasColumnName("TotalSinIGV").HasColumnType("decimal(18,2)"); // Added HasColumnType for TotalSinIgv
                 entity.Property(e => e.NumRefCliente).HasColumnName("NumRefCliente");
                 entity.Property(e => e.ClienteFinal).HasColumnName("ClienteFinal");
                 entity.Property(e => e.ClienteProveedor).HasColumnName("ClienteProveedor");
@@ -225,6 +225,7 @@ namespace CDS_DAL
 
             modelBuilder.Entity<TcUsd>(entity =>
             {
+                entity.ToTable("TC_USD"); // Explicitly set table name to match database schema
                 entity.HasKey(e => e.IdTc);
 
                 entity.Property(e => e.IdTc).HasColumnName("ID_TC");
