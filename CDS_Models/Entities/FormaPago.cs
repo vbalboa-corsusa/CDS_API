@@ -3,15 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDS_Models.Entities
 {
+    [Table("FormaPago")]
     public class FormaPago
     {
-        [Key]
-        public int IdFp { get; set; }
+        [Key, Column("Id_FP")]
+        public int? IdFp { get; set; }
         public int? IdCfp { get; set; }
+
         [StringLength(100)]
-        public string? DescripcionFp { get; set; }
+        public string? Descrip { get; set; }
+
         [StringLength(10)]
-        public string? NomCorto { get; set; }
+        public string? NCorto { get; set; }
+        
         public bool? Estado { get; set; }
 
         public ICollection<OrdenPedido>? OrdenesPedido { get; set; }

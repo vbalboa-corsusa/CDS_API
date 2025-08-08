@@ -43,7 +43,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Obtiene un vendedor por ID")]
         [SwaggerResponse(200, "Vendedor encontrado", typeof(VendedorDTO))]
         [SwaggerResponse(404, "Vendedor no encontrado")]
-        public async Task<ActionResult<VendedorDTO>> GetById(int id)
+        public async Task<ActionResult<VendedorDTO>> GetById(string id)
         {
             var vendedor = await _service.GetByIdAsync(id);
             if (vendedor == null) return NotFound();
@@ -56,7 +56,7 @@ namespace CDS_API.Controllers
         public async Task<ActionResult<VendedorDTO>> Create(VendedorDTO dto)
         {
             var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.IdVendedor }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created.IdVdr }, created);
         }
 
         [HttpPut("{id}")]
@@ -64,19 +64,23 @@ namespace CDS_API.Controllers
         [SwaggerResponse(204, "Vendedor actualizado")]
         [SwaggerResponse(400, "ID no coincide")]
         [SwaggerResponse(404, "Vendedor no encontrado")]
-        public async Task<IActionResult> Update(int id, VendedorDTO dto)
+        public async Task<IActionResult> Update(string id, VendedorDTO dto)
         {
-            if (id != dto.IdVendedor) return BadRequest();
-            var ok = await _service.UpdateAsync(id, dto);
-            if (!ok) return NotFound();
-            return NoContent();
+            if (id == dto.IdVdr)
+            {
+                var ok = await _service.UpdateAsync(id, dto);
+                if (!ok) return NotFound();
+                return NoContent();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Elimina un vendedor")]
         [SwaggerResponse(204, "Vendedor eliminado")]
         [SwaggerResponse(404, "Vendedor no encontrado")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var ok = await _service.DeleteAsync(id);
             if (!ok) return NotFound();

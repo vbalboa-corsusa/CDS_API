@@ -58,7 +58,7 @@ namespace CDS_API.Controllers
         public async Task<ActionResult<ProductoDTO>> Create(ProductoDTO dto)
         {
             var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.IdProd }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created.IdPrd }, created);
         }
 
         [HttpPut("{id}")]
@@ -67,7 +67,7 @@ namespace CDS_API.Controllers
         [SwaggerResponse(400, "ID no coincide")]
         public async Task<IActionResult> Update(int id, ProductoDTO dto)
         {
-            if (id != dto.IdProd) return BadRequest();
+            if (dto.IdPrd == null || id.ToString() != dto.IdPrd) return BadRequest();
             var ok = await _service.UpdateAsync(id, dto);
             if (!ok) return NotFound();
             return NoContent();

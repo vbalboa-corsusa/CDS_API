@@ -4,17 +4,18 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
+    [Table("CCosto")]
     public class CCosto
     {
-        [Key]
-        [StringLength(16)]
-        public string IdCc { get; set; }
+        [Key, Column("Id_CC", Order = 0)]
+        public string? IdCc { get; set; }
 
         [StringLength(50)]
-        public string? Descripcion { get; set; }
+        public string? Descrip { get; set; }
 
         [StringLength(10)]
-        public string? NumCorto { get; set; }
+        public string? NCorto { get; set; }
+
         public bool? Estado { get; set; }
 
         public ICollection<Proyecto>? ProyectosCCosto { get; set; }

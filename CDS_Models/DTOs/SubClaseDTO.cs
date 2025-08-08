@@ -2,10 +2,10 @@ namespace CDS_Models.DTOs
 {
     public class SubClaseDTO
     {
-        public int IdSClase { get; set; }
-        public int? IdClase { get; set; }
-        public string? Descripcion { get; set; }
-        public string? NomCorto { get; set; }
+        public int IdSCls { get; set; }
+        public int? IdCls { get; set; }
+        public string? Descrip { get; set; }
+        public string? NCorto { get; set; }
         public bool? Estado { get; set; }
     }
 }

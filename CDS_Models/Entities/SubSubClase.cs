@@ -5,13 +5,13 @@ namespace CDS_Models
 {
     public class SubSubClase : SubClase
     {
-        public int IdSSClase { get; set; }
+        public int? IdSSClase { get; set; }
 
         [StringLength(50)]
-        public string? Descripcion { get; set; }
+        public string? Descrip { get; set; }
 
         [StringLength(10)]
-        public string? NomCorto { get; set; }
+        public string? NCorto { get; set; }
         public bool? Estado { get; set; }
 
         public ICollection<Producto>? ProductosSubSubClase { get; set; }

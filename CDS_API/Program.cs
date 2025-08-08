@@ -31,7 +31,7 @@ builder.Services.AddSwaggerGen(c =>
 string connectionString;
 if (builder.Environment.IsDevelopment())
 {
-    connectionString = builder.Configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
+    connectionString = builder.Configuration.GetConnectionString("DB_CISAC_LOGIST");
 }
 else
 {
@@ -46,7 +46,7 @@ if (!string.IsNullOrEmpty(renderConn))
 else
 {
     // Usar la configuración local (appsettings.json)
-    var localConn = builder.Configuration.GetConnectionString("BD_LOGISTICA_LOCAL");
+    var localConn = builder.Configuration.GetConnectionString("DB_CISAC_LOGIST");
     builder.Services.AddDbContext<CDS_DAL.LogistContext>(options =>
         options.UseSqlServer(localConn));
 }

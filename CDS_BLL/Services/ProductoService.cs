@@ -22,19 +22,19 @@ namespace CDS_BLL.Services
             return await _context.Productos
                 .Select(p => new ProductoDTO
                 {
-                    IdProd = p.IdProd,
-                    IdMarca = p.IdMarca,
-                    CodComercial1 = p.CodComercial1,
-                    CodComercial2 = p.CodComercial2,
-                    CodComercial3 = p.CodComercial3,
-                    Descripcion = p.Descripcion,
-                    NomCorto = p.NomCorto,
-                    IdClase = p.IdClase,
-                    IdSClase = p.IdSClase,
-                    IdSSClase = p.IdSSClase,
+                    IdPrd = p.IdPrd,
+                    IdMca = p.IdMca,
+                    CodCom1 = p.CodCom1,
+                    CodCom2 = p.CodCom2,
+                    CodCom3 = p.CodCom3,
+                    Descrip = p.Descrip,
+                    NCorto = p.NCorto,
+                    IdCls = p.IdCls,
+                    IdSCls = p.IdSCls,
+                    IdSsCls = p.IdSsCls,
                     IdCc = p.IdCc,
-                    IdScc = p.IdScc,
-                    IdSscc = p.IdSscc,
+                    IdScC = p.IdScC,
+                    IdSscC = p.IdSscC,
                     Estado = p.Estado
                 })
                 .ToListAsync();
@@ -46,19 +46,19 @@ namespace CDS_BLL.Services
             if (p == null) return null;
             return new ProductoDTO
             {
-                IdProd = p.IdProd,
-                IdMarca = p.IdMarca,
-                CodComercial1 = p.CodComercial1,
-                CodComercial2 = p.CodComercial2,
-                CodComercial3 = p.CodComercial3,
-                Descripcion = p.Descripcion,
-                NomCorto = p.NomCorto,
-                IdClase = p.IdClase,
-                IdSClase = p.IdSClase,
-                IdSSClase = p.IdSSClase,
+                IdPrd = p.IdPrd,
+                IdMca = p.IdMca,
+                CodCom1 = p.CodCom1,
+                CodCom2 = p.CodCom2,
+                CodCom3 = p.CodCom3,
+                Descrip = p.Descrip,
+                NCorto = p.NCorto,
+                IdCls = p.IdCls,
+                IdSCls = p.IdSCls,
+                IdSsCls = p.IdSsCls,
                 IdCc = p.IdCc,
-                IdScc = p.IdScc,
-                IdSscc = p.IdSscc,
+                IdScC = p.IdScC,
+                IdSscC = p.IdSscC,
                 Estado = p.Estado
             };
         }
@@ -67,23 +67,24 @@ namespace CDS_BLL.Services
         {
             var entity = new Producto
             {
-                IdMarca = dto.IdMarca,
-                CodComercial1 = dto.CodComercial1,
-                CodComercial2 = dto.CodComercial2,
-                CodComercial3 = dto.CodComercial3,
-                Descripcion = dto.Descripcion,
-                NomCorto = dto.NomCorto,
-                IdClase = dto.IdClase,
-                IdSClase = dto.IdSClase,
-                IdSSClase = dto.IdSSClase,
+                IdPrd = dto.IdPrd,
+                IdMca = dto.IdMca,
+                CodCom1 = dto.CodCom1,
+                CodCom2 = dto.CodCom2,
+                CodCom3 = dto.CodCom3,
+                Descrip = dto.Descrip,
+                NCorto = dto.NCorto,
+                IdCls = dto.IdCls,
+                IdSCls = dto.IdSCls,
+                IdSsCls = dto.IdSsCls,
                 IdCc = dto.IdCc,
-                IdScc = dto.IdScc,
-                IdSscc = dto.IdSscc,
+                IdScC = dto.IdScC,
+                IdSscC = dto.IdSscC,
                 Estado = dto.Estado
             };
             _context.Productos.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdProd = entity.IdProd;
+            dto.IdPrd = entity.IdPrd;
             return dto;
         }
 
@@ -91,18 +92,18 @@ namespace CDS_BLL.Services
         {
             var entity = await _context.Productos.FindAsync(id);
             if (entity == null) return false;
-            entity.IdMarca = dto.IdMarca;
-            entity.CodComercial1 = dto.CodComercial1;
-            entity.CodComercial2 = dto.CodComercial2;
-            entity.CodComercial3 = dto.CodComercial3;
-            entity.Descripcion = dto.Descripcion;
-            entity.NomCorto = dto.NomCorto;
-            entity.IdClase = dto.IdClase;
-            entity.IdSClase = dto.IdSClase;
-            entity.IdSSClase = dto.IdSSClase;
+            entity.IdMca = dto.IdMca;
+            entity.CodCom1 = dto.CodCom1;
+            entity.CodCom2 = dto.CodCom2;
+            entity.CodCom3 = dto.CodCom3;
+            entity.Descrip = dto.Descrip;
+            entity.NCorto = dto.NCorto;
+            entity.IdCls = dto.IdCls;
+            entity.IdSCls = dto.IdSCls;
+            entity.IdSsCls = dto.IdSsCls;
             entity.IdCc = dto.IdCc;
-            entity.IdScc = dto.IdScc;
-            entity.IdSscc = dto.IdSscc;
+            entity.IdScC = dto.IdScC;
+            entity.IdSscC = dto.IdSscC;
             entity.Estado = dto.Estado;
             await _context.SaveChangesAsync();
             return true;
@@ -117,4 +118,4 @@ namespace CDS_BLL.Services
             return true;
         }
     }
-} 
+}

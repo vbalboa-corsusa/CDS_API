@@ -34,10 +34,6 @@ namespace CDS_API.Controllers
             try
             {
                 var detalles = await _context.OrdenesPedidoDetalle
-                    .Include(x => x.Producto)
-                    .Include(x => x.Servicio)
-                    .Include(x => x.Proyecto)
-                    .Include(x => x.UnidadMedida)
                     .Include(x => x.Moneda)
                     .Include(x => x.TcUsd)
                     .Include(x => x.CCosto)
@@ -46,8 +42,7 @@ namespace CDS_API.Controllers
                     .Include(x => x.OrdenPedido)
                     .Include(x => x.SubSubTiposNegocio)
                     .Include(x => x.SubTiposNegocio)
-                    .Include(x => x.TiposNegocio)
-                    .Include(x => x.StatusOp)
+                    .Include(x => x.TipoNegocio)
                     .ToListAsync();
                 System.Console.WriteLine($"[LOG] Ordenes de pedido detalle encontradas: {detalles.Count}");
                 return Ok(detalles);
@@ -64,16 +59,12 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Obtiene un detalle de orden de pedido por ID")]
         [SwaggerResponse(200, "Detalle encontrado", typeof(OrdenPedidoDetalle))]
         [SwaggerResponse(404, "Detalle no encontrado")]
-        public async Task<ActionResult<OrdenPedidoDetalle>> GetById(int id)
+        public async Task<ActionResult<OrdenPedidoDetalle>> GetById(string id)
         {
             System.Console.WriteLine($"[LOG] GET /OrdenPedidoDetalle/{id} llamado");
             try
             {
                 var detalle = await _context.OrdenesPedidoDetalle
-                    .Include(x => x.Producto)
-                    .Include(x => x.Servicio)
-                    .Include(x => x.Proyecto)
-                    .Include(x => x.UnidadMedida)
                     .Include(x => x.Moneda)
                     .Include(x => x.TcUsd)
                     .Include(x => x.CCosto)
@@ -82,9 +73,9 @@ namespace CDS_API.Controllers
                     .Include(x => x.OrdenPedido)
                     .Include(x => x.SubSubTiposNegocio)
                     .Include(x => x.SubTiposNegocio)
-                    .Include(x => x.TiposNegocio)
-                    .Include(x => x.StatusOp)
-                    .FirstOrDefaultAsync(x => x.IdOpd == id);
+                    .Include(x => x.TipoNegocio)
+                    //.Include(x => x.EstadosOp)
+                    .FirstOrDefaultAsync(x => x.IdOpci == id);
                 if (detalle == null)
                 {
                     System.Console.WriteLine($"[LOG] Detalle con ID {id} no encontrado");
@@ -112,8 +103,8 @@ namespace CDS_API.Controllers
             {
                 _context.OrdenesPedidoDetalle.Add(detalle);
                 await _context.SaveChangesAsync();
-                System.Console.WriteLine($"[LOG] Detalle con ID {detalle.IdOpd} creado");
-                return CreatedAtAction(nameof(GetById), new { id = detalle.IdOpd }, detalle);
+                System.Console.WriteLine($"[LOG] Detalle con ID {detalle.IdOpci} creado");
+                return CreatedAtAction(nameof(GetById), new { id = detalle.IdOpci }, detalle);
             }
             catch (Exception ex)
             {
@@ -128,10 +119,10 @@ namespace CDS_API.Controllers
         [SwaggerResponse(204, "Detalle actualizado exitosamente")]
         [SwaggerResponse(400, "ID no coincide con el detalle proporcionado")]
         [SwaggerResponse(404, "Detalle no encontrado")]
-        public async Task<IActionResult> Update(int id, OrdenPedidoDetalle detalle)
+        public async Task<IActionResult> Update(string id, OrdenPedidoDetalle detalle)
         {
             System.Console.WriteLine($"[LOG] PUT /OrdenPedidoDetalle/{id} llamado");
-            if (id != detalle.IdOpd)
+            if (id != detalle.IdOpci)
             {
                 System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: ID no coincide con el detalle proporcionado");
                 return BadRequest();
@@ -144,7 +135,7 @@ namespace CDS_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _context.OrdenesPedidoDetalle.AnyAsync(x => x.IdOpd == id))
+                if (!await _context.OrdenesPedidoDetalle.AnyAsync(x => x.IdOpci == id))
                 {
                     System.Console.WriteLine($"[ERROR] PUT /OrdenPedidoDetalle/{id}: Detalle no encontrado");
                     return NotFound();

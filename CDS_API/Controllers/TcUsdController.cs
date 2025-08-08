@@ -35,7 +35,7 @@ namespace CDS_API.Controllers
                 var tcUsds = await _context.TcUsd
                     .Select(t => new TcUsdDTO
                     {
-                        IdTc = t.IdTc,
+                        IdTc = (int)t.IdTc,
                         IdMda = t.IdMda,
                         FechaTc = t.FechaTc,
                         TipCam = t.TipCam
@@ -69,7 +69,7 @@ namespace CDS_API.Controllers
 
                 var tcUsdDTO = new TcUsdDTO
                 {
-                    IdTc = tcUsd.IdTc,
+                    IdTc = (int)tcUsd.IdTc,
                     IdMda = tcUsd.IdMda,
                     FechaTc = tcUsd.FechaTc,
                     TipCam = tcUsd.TipCam
@@ -103,7 +103,7 @@ namespace CDS_API.Controllers
                 _context.TcUsd.Add(tcUsd);
                 await _context.SaveChangesAsync();
 
-                tcUsdDTO.IdTc = tcUsd.IdTc; // Assuming Id is auto-generated
+                tcUsdDTO.IdTc = (int)tcUsd.IdTc; // Assuming Id is auto-generated
                 
                 return CreatedAtAction(nameof(GetTcUsd), new { id = tcUsdDTO.IdTc }, tcUsdDTO);
             }

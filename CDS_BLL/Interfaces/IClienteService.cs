@@ -7,9 +7,9 @@ namespace CDS_BLL.Interfaces
     public interface IClienteService
     {
         Task<IEnumerable<ClienteDTO>> GetAllAsync();
-        Task<ClienteDTO?> GetByIdAsync(int id);
+        Task<ClienteDTO?> GetByIdAsync(string id);
         Task<ClienteDTO> CreateAsync(ClienteDTO dto);
-        Task<bool> UpdateAsync(int id, ClienteDTO dto);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(string id);
+        Task<bool> UpdateAsync(string id, ClienteDTO dto);
     }
 }

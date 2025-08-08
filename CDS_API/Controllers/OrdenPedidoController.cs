@@ -54,7 +54,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Obtiene una orden de pedido por ID")]
         [SwaggerResponse(200, "Orden de pedido encontrada", typeof(OrdenPedido))]
         [SwaggerResponse(404, "Orden de pedido no encontrada")]
-        public async Task<ActionResult<OrdenPedido>> GetById(int id)
+        public async Task<ActionResult<OrdenPedido>> GetById(string id)
         {
             var pedido = await _context.OrdenPedido
                 .Include(x => x.Cliente)
@@ -71,7 +71,7 @@ namespace CDS_API.Controllers
         [HttpPost]
         [SwaggerOperation(Summary = "Crea una nueva orden de pedido")]
         [SwaggerResponse(201, "Orden de pedido creada exitosamente", typeof(OrdenPedido))]
-        [SwaggerResponse(400, "Datos inv�lidos")]
+        [SwaggerResponse(400, "Datos invlidos")]
         public async Task<ActionResult<OrdenPedido>> Create(OrdenPedido pedido)
         {
             _context.OrdenPedido.Add(pedido);
@@ -85,9 +85,9 @@ namespace CDS_API.Controllers
         [SwaggerResponse(204, "Orden de pedido actualizada exitosamente")]
         [SwaggerResponse(400, "ID no coincide")]
         [SwaggerResponse(404, "Orden de pedido no encontrada")]
-        public async Task<IActionResult> Update(int id, OrdenPedido pedido)
+        public async Task<IActionResult> Update(string id, [FromBody] OrdenPedido pedido)
         {
-            if (id != pedido.IdOpci)
+            if (pedido.IdOpci == null || id != pedido.IdOpci)
                 return BadRequest();
             _context.Entry(pedido).State = EntityState.Modified;
             try
@@ -109,9 +109,9 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Elimina una orden de pedido por ID")]
         [SwaggerResponse(204, "Orden de pedido eliminada exitosamente")]
         [SwaggerResponse(404, "Orden de pedido no encontrada")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var pedido = await _context.OrdenPedido.FindAsync(id);
+            var pedido = await _context.OrdenPedido.FirstOrDefaultAsync(x => x.IdOpci == id);
             if (pedido == null)
                 return NotFound();
             _context.OrdenPedido.Remove(pedido);
@@ -119,4 +119,4 @@ namespace CDS_API.Controllers
             return NoContent();
         }
     }
-} 
+}

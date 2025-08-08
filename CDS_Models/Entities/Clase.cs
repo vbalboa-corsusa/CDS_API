@@ -6,7 +6,7 @@ namespace CDS_Models
     public class Clase
     {
         [Key]
-        public int IdClase { get; set; }
+        public int? IdClase { get; set; }
 
         [StringLength(50)]
         public string? Descripcion { get; set; }

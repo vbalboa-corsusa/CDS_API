@@ -6,11 +6,16 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
+    [Table("Tc_USD")]
     public class TcUsd
     {
-        [Key]
-        public int IdTc { get; set; }
+        [Key, Column("ID_TC")]
+        public int? IdTc { get; set; }
+
+        [Column("Id_Mda")]
         public int? IdMda { get; set; }
+
+        [Column("FechaTC")]
         public DateTime? FechaTc { get; set; }
 
         [Column(TypeName = "numeric")]

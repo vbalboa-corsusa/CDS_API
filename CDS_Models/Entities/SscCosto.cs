@@ -4,17 +4,23 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
-    public class SscCosto : ScCosto
+    [Table("SSCCosto")]
+    public class SscCosto
     {
-        [StringLength(16)]
-        public string IdSscc { get; set; }
-
-        [StringLength(50)]
-        public string? Descripcion { get; set; }
+        [Key, Column("Id_SSCC", Order = 2)]
+        [StringLength(10)]
+        public string? IdSscC { get; set; }
 
         [StringLength(10)]
-        public string? NomCorto { get; set; }
-        public bool? Estado { get; set; }
+        [Column("Id_SCC", Order = 1)]
+        public string? IdScC { get; set; }
+
+        [StringLength(10)]
+        [Column("Id_CC", Order = 0)]
+        public string? IdCc { get; set; }
+
+        [ForeignKey(nameof(IdCc) + "," + nameof(IdScC))]
+        public ScCosto? ScCosto { get; set; }
 
         public ICollection<Proyecto>? ProyectosSscCosto { get; set; }
         public ICollection<Servicio>? ServiciosSscCosto { get; set; }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using CDS_Models.Entities;
 
 namespace CDS_BLL.Services
 {
@@ -28,13 +29,13 @@ namespace CDS_BLL.Services
                 return await _context.Clientes
                     .Select(c => new ClienteDTO
                     {
-                        IdCliente = c.IdCliente,
+                        IdClt = c.IdClt,
                         IdTdi = c.IdTdi,
                         RazonSocial = c.RazonSocial,
-                        CorreoCliente = c.CorreoCliente,
-                        NumDocumento = c.NumDocumento,
-                        TelefonoCliente = c.TelefonoCliente,
-                        DireccionCliente = c.DireccionCliente,
+                        CorreoClt = c.CorreoClt,
+                        NDoc = c.NDoc,
+                        TelefClt = c.TelefClt,
+                        DirecClt = c.DirecClt,
                         IbCltPrv = c.IbCltPrv,
                         IbCltFinal = c.IbCltFinal
                     })
@@ -47,19 +48,19 @@ namespace CDS_BLL.Services
             }
         }
 
-        public async Task<ClienteDTO?> GetByIdAsync(int id)
+        public async Task<ClienteDTO?> GetByIdAsync(string id)
         {
             var c = await _context.Clientes.FindAsync(id);
             if (c == null) return null;
             return new ClienteDTO
             {
-                IdCliente = c.IdCliente,
+                IdClt = c.IdClt,
                 IdTdi = c.IdTdi,
                 RazonSocial = c.RazonSocial,
-                CorreoCliente = c.CorreoCliente,
-                NumDocumento = c.NumDocumento,
-                TelefonoCliente = c.TelefonoCliente,
-                DireccionCliente = c.DireccionCliente,
+                CorreoClt = c.CorreoClt,
+                NDoc = c.NDoc,
+                TelefClt = c.TelefClt,
+                DirecClt = c.DirecClt,
                 IbCltPrv = c.IbCltPrv,
                 IbCltFinal = c.IbCltFinal
             };
@@ -71,36 +72,36 @@ namespace CDS_BLL.Services
             {
                 IdTdi = dto.IdTdi,
                 RazonSocial = dto.RazonSocial,
-                CorreoCliente = dto.CorreoCliente,
-                NumDocumento = dto.NumDocumento,
-                TelefonoCliente = dto.TelefonoCliente,
-                DireccionCliente = dto.DireccionCliente,
+                CorreoClt = dto.CorreoClt,
+                NDoc = dto.NDoc,
+                TelefClt = dto.TelefClt,
+                DirecClt = dto.DirecClt,
                 IbCltPrv = dto.IbCltPrv,
                 IbCltFinal = dto.IbCltFinal
             };
             _context.Clientes.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdCliente = entity.IdCliente;
+            dto.IdClt = entity.IdClt;
             return dto;
         }
 
-        public async Task<bool> UpdateAsync(int id, ClienteDTO dto)
+        public async Task<bool> UpdateAsync(string id, ClienteDTO dto)
         {
             var entity = await _context.Clientes.FindAsync(id);
             if (entity == null) return false;
             entity.IdTdi = dto.IdTdi;
             entity.RazonSocial = dto.RazonSocial;
-            entity.CorreoCliente = dto.CorreoCliente;
-            entity.NumDocumento = dto.NumDocumento;
-            entity.TelefonoCliente = dto.TelefonoCliente;
-            entity.DireccionCliente = dto.DireccionCliente;
+            entity.CorreoClt = dto.CorreoClt;
+            entity.NDoc = dto.NDoc;
+            entity.TelefClt = dto.TelefClt;
+            entity.DirecClt = dto.DirecClt;
             entity.IbCltPrv = dto.IbCltPrv;
             entity.IbCltFinal = dto.IbCltFinal;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var entity = await _context.Clientes.FindAsync(id);
             if (entity == null) return false;

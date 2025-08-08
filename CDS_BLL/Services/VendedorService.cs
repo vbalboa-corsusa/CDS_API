@@ -22,26 +22,26 @@ namespace CDS_BLL.Services
             return await _context.Vendedores
                 .Select(v => new VendedorDTO
                 {
-                    IdVendedor = v.IdVendedor,
+                    IdVdr = v.IdVdr,
                     IdTdi = v.IdTdi,
-                    NumDocVendedor = v.NumDocVendedor,
-                    NombreVendedor = v.NombreVendedor,
+                    NDoc = v.NDoc,
+                    NomVdr = v.NomVdr,
                     IbLider = v.IbLider,
                     Estado = v.Estado
                 })
                 .ToListAsync();
         }
 
-        public async Task<VendedorDTO?> GetByIdAsync(int id)
+        public async Task<VendedorDTO?> GetByIdAsync(string id)
         {
             var v = await _context.Vendedores.FindAsync(id);
             if (v == null) return null;
             return new VendedorDTO
             {
-                IdVendedor = v.IdVendedor,
+                IdVdr = v.IdVdr,
                 IdTdi = v.IdTdi,
-                NumDocVendedor = v.NumDocVendedor,
-                NombreVendedor = v.NombreVendedor,
+                NDoc = v.NDoc,
+                NomVdr = v.NomVdr,
                 IbLider = v.IbLider,
                 Estado = v.Estado
             };
@@ -53,37 +53,39 @@ namespace CDS_BLL.Services
             int maxId = 0;
             if (await _context.Vendedores.AnyAsync())
             {
-                maxId = await _context.Vendedores.MaxAsync(v => v.IdVendedor);
+                maxId = await _context.Vendedores
+                    .Select(v => int.Parse(v.IdVdr.Substring(3))) // Extraer el número del IdVdr
+                    .MaxAsync();
             }
             var entity = new Vendedor
             {
-                IdVendedor = maxId + 1, // Asignar el nuevo Id manualmente
+                IdVdr = "VDR" + (maxId + 1).ToString("D7"),// Para convertir Id a formato 'VDR0000001'
                 IdTdi = dto.IdTdi,
-                NumDocVendedor = dto.NumDocVendedor,
-                NombreVendedor = dto.NombreVendedor,
+                NDoc = dto.NDoc,
+                NomVdr = dto.NomVdr,
                 IbLider = dto.IbLider,
                 Estado = dto.Estado
             };
             _context.Vendedores.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdVendedor = entity.IdVendedor;
+            dto.IdVdr = entity.IdVdr;
             return dto;
         }
 
-        public async Task<bool> UpdateAsync(int id, VendedorDTO dto)
+        public async Task<bool> UpdateAsync(string id, VendedorDTO dto)
         {
             var entity = await _context.Vendedores.FindAsync(id);
             if (entity == null) return false;
             entity.IdTdi = dto.IdTdi;
-            entity.NumDocVendedor = dto.NumDocVendedor;
-            entity.NombreVendedor = dto.NombreVendedor;
+            entity.NDoc = dto.NDoc;
+            entity.NomVdr = dto.NomVdr;
             entity.IbLider = dto.IbLider;
             entity.Estado = dto.Estado;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var entity = await _context.Vendedores.FindAsync(id);
             if (entity == null) return false;

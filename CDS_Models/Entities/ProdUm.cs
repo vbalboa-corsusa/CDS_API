@@ -3,23 +3,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDS_Models
 {
+    [Table("Prod_UM")]
     public class ProdUm
     {
-        [Key]
-        [Column(Order = 0)]
-        public int IdProd { get; set; }
+        [Key, Column("Id_Prd", Order = 0)]
+        public string? IdPrd { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+        [Key, Column("Id_UM", Order = 1)]
         public int IdUm { get; set; }
 
         [StringLength(100)]
-        public string? Descripcion { get; set; }
+        public string? Descrip { get; set; }
         public bool? Estado { get; set; }
 
-        [ForeignKey("IdProd")]
+        [ForeignKey(nameof(IdPrd))]
         public Producto? Productos { get; set; }
-        [ForeignKey("IdUm")]
+
+        [ForeignKey(nameof(IdUm))]
         public UnidadMedida? UnidadesMedida { get; set; }
     }
 }

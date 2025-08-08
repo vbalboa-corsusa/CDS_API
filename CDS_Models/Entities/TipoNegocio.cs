@@ -4,19 +4,20 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
-    public class UnidadMedida
+    public class TipoNegocio
     {
-        [Key, Column("Id_UM")]
-        public int? IdUm { get; set; }
+        [Key, Column("Id_TN")]
+        public int? IdTn { get; set; }
 
-        [StringLength(50)]
-        public string? Nombre { get; set; }
+        [Column(TypeName = "nvarchar(50)")]
+        public string? Descrip { get; set; }
 
-        [StringLength(10)]
+        [Column(TypeName = "nvarchar(10)")]
         public string? NCorto { get; set; }
+
         public bool? Estado { get; set; }
 
-        public ICollection<ProdUm>? ProdUm { get; set; }
         public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
+        public ICollection<SubTipoNegocio>? SubTiposNegocio { get; set; }
     }
 }

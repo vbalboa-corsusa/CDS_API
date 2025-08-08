@@ -43,7 +43,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Obtiene un cliente por ID")]
         [SwaggerResponse(200, "Cliente encontrado", typeof(ClienteDTO))]
         [SwaggerResponse(404, "Cliente no encontrado")]
-        public async Task<ActionResult<ClienteDTO>> GetById(int id)
+        public async Task<ActionResult<ClienteDTO>> GetById(string id)
         {
             var cliente = await _service.GetByIdAsync(id);
             if (cliente == null) return NotFound();
@@ -56,7 +56,7 @@ namespace CDS_API.Controllers
         public async Task<ActionResult<ClienteDTO>> Create(ClienteDTO dto)
         {
             var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.IdCliente }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created.IdClt }, created);
         }
 
         [HttpPut("{id}")]
@@ -64,19 +64,23 @@ namespace CDS_API.Controllers
         [SwaggerResponse(204, "Cliente actualizado")]
         [SwaggerResponse(400, "ID no coincide")]
         [SwaggerResponse(404, "Cliente no encontrado")]
-        public async Task<IActionResult> Update(int id, ClienteDTO dto)
+        public async Task<IActionResult> Update(string id, ClienteDTO dto)
         {
-            if (id != dto.IdCliente) return BadRequest();
-            var ok = await _service.UpdateAsync(id, dto);
-            if (!ok) return NotFound();
-            return NoContent();
+            if (id == dto.IdClt)
+            {
+                var ok = await _service.UpdateAsync(id, dto);
+                if (!ok) return NotFound();
+                return NoContent();
+            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
         [SwaggerOperation(Summary = "Elimina un cliente")]
         [SwaggerResponse(204, "Cliente eliminado")]
         [SwaggerResponse(404, "Cliente no encontrado")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var ok = await _service.DeleteAsync(id);
             if (!ok) return NotFound();

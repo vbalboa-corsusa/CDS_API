@@ -4,6 +4,7 @@ using Microsoft.Extensions.FileProviders;
 using CDS_Models;
 using CDS_Models.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CDS_DAL
 {
@@ -22,12 +23,12 @@ namespace CDS_DAL
         public  DbSet<Moneda> Monedas { get; set; }
         public  DbSet<Cliente> Clientes { get; set; }
         public  DbSet<Vendedor> Vendedores { get; set; }
-        public  DbSet<TipoDocumento> TiposDocumento { get; set; }
+        public  DbSet<TipoDocsIdent> TiposDocumento { get; set; }
         public  DbSet<Marca> Marcas { get; set; }
-        public  DbSet<SubTiposNegocio> SubTiposNegocio { get; set; }
-        public  DbSet<TiposNegocio> TiposNegocio { get; set; }
-        public  DbSet<SubSubTiposNegocio> SubSubTiposNegocio { get; set; }
-        public  DbSet<StatusOp> StatusOp { get; set; }
+        public  DbSet<SubTipoNegocio> SubTiposNegocio { get; set; }
+        public  DbSet<TipoNegocio> TipoNegocio { get; set; }
+        public  DbSet<SubSubTipoNegocio> SubSubTiposNegocio { get; set; }
+        public  DbSet<EstadosOp> EstadosOp { get; set; }
         public  DbSet<FormaPago> FormaPago { get; set; }
         public  DbSet<UnidadMedida> UnidadesMedida { get; set; }
         public  DbSet<ProdUm> ProdUm { get; set; }
@@ -68,44 +69,63 @@ namespace CDS_DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProdUm>()
-                .HasKey(pu => new { pu.IdProd, pu.IdUm });
+            modelBuilder.Entity<ProdUm>(entity =>
+            {
+                entity.ToTable("Prod_UM");
+                entity.HasKey(e => new { e.IdPrd, e.IdUm });
+
+                entity.Property(e => e.IdPrd).HasColumnName("Id_Prd");
+                entity.Property(e => e.IdUm).HasColumnName("Id_UM");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.Estado).HasColumnName("Estado");
+
+                entity.HasOne(d => d.Productos)
+                    .WithMany(p => p.ProdUm)
+                    .HasForeignKey(d => d.IdPrd)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PRODUM_PRODUCTOS");
+
+                entity.HasOne(d => d.UnidadesMedida)
+                    .WithMany(p => p.ProdUm)
+                    .HasForeignKey(d => d.IdUm)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PRODUM_UNIDADMEDIDA");
+            });
 
             modelBuilder.Entity<OrdenPedido>(entity =>
             {
-                entity.ToTable("ORDEN_PEDIDO");
+                entity.ToTable("OrdPedido");
                 entity.HasKey(e => e.IdOpci);
 
-                entity.Property(e => e.IdOpci).HasColumnName("ID_OPCI");
-                entity.Property(e => e.IdFp).HasColumnName("ID_FP");
-                entity.Property(e => e.IdCliente).HasColumnName("ID_Cliente");
-                entity.Property(e => e.IdVendedor).HasColumnName("ID_Vendedor");
-                entity.Property(e => e.IdOpd).HasColumnName("ID_OPD");
-                entity.Property(e => e.FecRecepcion).HasColumnName("FecRecepcion");
+                entity.Property(e => e.IdOpci).HasColumnName("Id_OPCI");
+                entity.Property(e => e.IdFp).HasColumnName("Id_FP");
+                entity.Property(e => e.IdClt).HasColumnName("Id_Clt");
+                entity.Property(e => e.IdVdr).HasColumnName("Id_Vdr");
+                entity.Property(e => e.FecRecep).HasColumnName("FecRecep");
                 entity.Property(e => e.FecInicio).HasColumnName("FecInicio");
                 entity.Property(e => e.FecProcVi).HasColumnName("FecProcVI");
-                entity.Property(e => e.RazonSocialCliente).HasColumnName("RazonSocialCliente");
+                entity.Property(e => e.RsocialClt).HasColumnName("RSocialClt");
                 entity.Property(e => e.NumOp).HasColumnName("NumOP");
-                entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
-                entity.Property(e => e.TotalSinIgv).HasColumnName("TotalSinIGV").HasColumnType("decimal(18,2)"); // Added HasColumnType for TotalSinIgv
+                entity.Property(e => e.IdMda).HasColumnName("Id_Mda");
+                entity.Property(e => e.TotalSinIgv).HasColumnName("TotalSinIGV").HasColumnType("decimal(18,2)");
                 entity.Property(e => e.NumRefCliente).HasColumnName("NumRefCliente");
-                entity.Property(e => e.ClienteFinal).HasColumnName("ClienteFinal");
-                entity.Property(e => e.ClienteProveedor).HasColumnName("ClienteProveedor");
-                entity.Property(e => e.Vendedor1).HasColumnName("Vendedor1");
-                entity.Property(e => e.Vendedor2).HasColumnName("Vendedor2");
-                entity.Property(e => e.Lider).HasColumnName("Lider");
+                entity.Property(e => e.IbCltFin).HasColumnName("Ib_CltFinal");
+                entity.Property(e => e.IbCltPrv).HasColumnName("Ib_CltPrv");
+                entity.Property(e => e.IbVdr1).HasColumnName("Ib_Vdr1");
+                entity.Property(e => e.IbVdr2).HasColumnName("Ib_Vdr2");
+                entity.Property(e => e.IbLider).HasColumnName("Ib_Lider");
                 entity.Property(e => e.UbrutaCoti).HasColumnName("UbrutaCoti");
                 entity.Property(e => e.ComisionCompartida).HasColumnName("ComisionCompartida");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.Cliente)
                     .WithMany(p => p.OrdenPedido)
-                    .HasForeignKey(d => d.IdCliente)
+                    .HasForeignKey(d => d.IdClt)
                     .HasConstraintName("FK_ORDENPEDIDO_CLIENTE");
 
                 entity.HasOne(d => d.Vendedor)
                     .WithMany(p => p.OrdenPedido)
-                    .HasForeignKey(d => d.IdVendedor)
+                    .HasForeignKey(d => d.IdVdr)
                     .HasConstraintName("FK_ORDENPEDIDO_VENDEDORES");
 
                 entity.HasOne(d => d.Moneda)
@@ -121,18 +141,19 @@ namespace CDS_DAL
 
             modelBuilder.Entity<Cliente>(entity =>
             {
-                entity.ToTable("CLIENTE");
-                entity.HasKey(e => e.IdCliente);
+                entity.ToTable("Cliente");
+                entity.HasKey(e => e.IdClt);
 
-                entity.Property(e => e.IdCliente).HasColumnName("ID_Cliente");
-                entity.Property(e => e.IdTdi).HasColumnName("ID_TDI");
+                entity.Property(e => e.IdClt).HasColumnName("Id_Clt");
+                entity.Property(e => e.IdTdi).HasColumnName("Id_TDI");
+                entity.Property(e => e.NDoc).HasColumnName("NDoc");
                 entity.Property(e => e.RazonSocial).HasColumnName("RazonSocial");
-                entity.Property(e => e.CorreoCliente).HasColumnName("CorreoCliente");
-                entity.Property(e => e.NumDocumento).HasColumnName("NumDocumento");
-                entity.Property(e => e.TelefonoCliente).HasColumnName("TelefonoCliente");
-                entity.Property(e => e.DireccionCliente).HasColumnName("DireccionCliente");
-                entity.Property(e => e.IbCltPrv).HasColumnName("IB_CltPrv");
-                entity.Property(e => e.IbCltFinal).HasColumnName("IB_CltFinal");
+                entity.Property(e => e.CorreoClt).HasColumnName("CorreoClt");
+                entity.Property(e => e.TelefClt).HasColumnName("TelefClt");
+                entity.Property(e => e.DirecClt).HasColumnName("DirecClt");
+                entity.Property(e => e.IbCltPrv).HasColumnName("Ib_CltPrv");
+                entity.Property(e => e.IbCltFinal).HasColumnName("Ib_CltFinal");
+                entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.TipoDocumento)
                     .WithMany(p => p.Clientes)
@@ -142,94 +163,76 @@ namespace CDS_DAL
 
             modelBuilder.Entity<Vendedor>(entity =>
             {
-                entity.HasKey(e => e.IdVendedor);
+                entity.ToTable("Vendedor");
+                entity.HasKey(e => e.IdVdr);
 
-                entity.Property(e => e.IdVendedor).HasColumnName("ID_Vendedor");
-                entity.Property(e => e.IdTdi).HasColumnName("ID_TDI");
-                entity.Property(e => e.NumDocVendedor).HasColumnName("NumDoc_Vendedor");
-                entity.Property(e => e.NombreVendedor).HasColumnName("Nombre_Vendedor");
+                entity.Property(e => e.IdVdr).HasColumnName("Id_Vdr");
+                entity.Property(e => e.IdTdi).HasColumnName("Id_TDI");
+                entity.Property(e => e.NDoc).HasColumnName("NDoc");
+                entity.Property(e => e.NomVdr).HasColumnName("NomVdr");
                 entity.Property(e => e.IbLider).HasColumnName("IB_Lider");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.TipoDocumento)
-                    .WithMany(p => p.Vendedor)
+                    .WithMany(p => p.Vendedores)
                     .HasForeignKey(d => d.IdTdi)
                     .HasConstraintName("FK_VENDEDORES_TIPODOCUMENTO");
             });
 
-            modelBuilder.Entity<SubTiposNegocio>(static entity =>
+            modelBuilder.Entity<SubTipoNegocio>(static entity =>
             {
-                entity.HasKey(e => e.IdStn);
+                entity.ToTable("TipNeg_Sub");
+                entity.HasKey(e => new { e.IdTn, e.IdStn });
 
-                entity.Property(e => e.IdStn).HasColumnName("ID_STN");
-                entity.Property(e => e.IdTn).HasColumnName("ID_TN");
-                entity.Property(e => e.DescripcionStn).HasColumnName("DescripcionSTN");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+                entity.Property(e => e.IdTn).HasColumnName("Id_TN");
+                entity.Property(e => e.IdStn).HasColumnName("Id_STN");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
-                entity.HasOne(d => d.TiposNegocio)
+                entity.HasOne(d => d.TipoNegocio)
                     .WithMany(p => p.SubTiposNegocio)
                     .HasForeignKey(d => d.IdTn)
                     .HasConstraintName("FK_STNEGOCIO_TIPONEGOCIO");
             });
 
-            modelBuilder.Entity<SubSubTiposNegocio>(entity =>
+            modelBuilder.Entity<SubSubTipoNegocio>(entity =>
             {
-                entity.HasKey(e => e.IdSstn);
+                entity.ToTable("TipNeg_SubSub");
+                entity.HasKey(e => new { e.IdTn, e.IdStn, e.IdSstn });
 
-                entity.Property(e => e.IdSstn).HasColumnName("ID_SSTN");
-                entity.Property(e => e.IdStn).HasColumnName("ID_STN");
-                entity.Property(e => e.DescripcionSstn).HasColumnName("DescripcionSSTN");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+                entity.Property(e => e.IdTn).HasColumnName("Id_TN");
+                entity.Property(e => e.IdStn).HasColumnName("Id_STN");
+                entity.Property(e => e.IdSstn).HasColumnName("Id_SSTN");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
-                entity.HasOne(d => d.SubTiposNegocio)
-                    .WithMany(p => p.SubSubTiposNegocio)
-                    .HasForeignKey(d => d.IdStn)
+                entity.HasOne(d => d.SubTipoNegocio)
+                    .WithMany(p => p.SubSubTipoNegocio)
+                    .HasForeignKey(d => new { d.IdTn, d.IdStn })
                     .HasConstraintName("FK_SSTN_STNEGOCIO");
             });
 
             modelBuilder.Entity<FormaPago>(entity =>
             {
-                entity.ToTable("FORMA_PAGO");
+                entity.ToTable("FormaPago");
                 entity.HasKey(e => e.IdFp);
-                entity.Property(e => e.IdFp).HasColumnName("ID_FP");
-                entity.Property(e => e.IdCfp).HasColumnName("ID_CFP");
-                entity.Property(e => e.DescripcionFp).HasColumnName("DescripcionFP");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+
+                entity.Property(e => e.IdFp).HasColumnName("Id_FP");
+                entity.Property(e => e.IdCfp).HasColumnName("Id_CFP");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
-                // No navegación ni referencia a CatFormaPago
-            });
-
-            modelBuilder.Entity<ProdUm>(entity =>
-            {
-                entity.HasKey(e => new { e.IdProd, e.IdUm });
-
-                entity.Property(e => e.IdProd).HasColumnName("ID_Prod");
-                entity.Property(e => e.IdUm).HasColumnName("ID_UM");
-                entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
-                entity.Property(e => e.Estado).HasColumnName("Estado");
-
-                entity.HasOne(d => d.Productos)
-                    .WithMany(p => p.ProdUm)
-                    .HasForeignKey(d => d.IdProd)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PRODUM_PRODUCTOS");
-
-                entity.HasOne(d => d.UnidadesMedida)
-                    .WithMany(p => p.ProdUm)
-                    .HasForeignKey(d => d.IdUm)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PRODUM_UNIDADMEDIDA");
             });
 
             modelBuilder.Entity<TcUsd>(entity =>
             {
-                entity.ToTable("TC_USD"); // Explicitly set table name to match database schema
+                entity.ToTable("TipoCambio");
                 entity.HasKey(e => e.IdTc);
 
-                entity.Property(e => e.IdTc).HasColumnName("ID_TC");
-                entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
+                entity.Property(e => e.IdTc).HasColumnName("Id_TC");
+                entity.Property(e => e.IdMda).HasColumnName("Id_Mda");
                 entity.Property(e => e.FechaTc).HasColumnName("FechaTC");
                 entity.Property(e => e.TipCam).HasColumnName("TipCam");
 
@@ -241,41 +244,42 @@ namespace CDS_DAL
 
             modelBuilder.Entity<Producto>(entity =>
             {
-                entity.HasKey(e => e.IdProd);
+                entity.ToTable("Producto");
+                entity.HasKey(e => e.IdPrd);
 
-                entity.Property(e => e.IdProd).HasColumnName("ID_Prod");
-                entity.Property(e => e.IdMarca).HasColumnName("ID_Marca");
-                entity.Property(e => e.CodComercial1).HasColumnName("Cod_Comercial1");
-                entity.Property(e => e.CodComercial2).HasColumnName("Cod_Comercial2");
-                entity.Property(e => e.CodComercial3).HasColumnName("Cod_Comercial3");
-                entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.IdClase).HasColumnName("ID_Clase");
-                entity.Property(e => e.IdSClase).HasColumnName("ID_SClase");
-                entity.Property(e => e.IdSSClase).HasColumnName("ID_SSClase");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
+                entity.Property(e => e.IdPrd).HasColumnName("Id_Prd");
+                entity.Property(e => e.IdMca).HasColumnName("Id_Mca");
+                entity.Property(e => e.CodCom1).HasColumnName("CodCom1");
+                entity.Property(e => e.CodCom2).HasColumnName("CodCom2");
+                entity.Property(e => e.CodCom3).HasColumnName("CodCom3");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
+                entity.Property(e => e.IdCls).HasColumnName("Id_Cls");
+                entity.Property(e => e.IdSCls).HasColumnName("Id_SCls");
+                entity.Property(e => e.IdSsCls).HasColumnName("Id_SSCls");
+                entity.Property(e => e.IdCc).HasColumnName("Id_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScC).HasColumnName("Id_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscC).HasColumnName("Id_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.Marca)
                     .WithMany(p => p.Productos)
-                    .HasForeignKey(d => d.IdMarca)
+                    .HasForeignKey(d => d.IdMca)
                     .HasConstraintName("FK_PRODUCTOS_MARCA");
 
                 entity.HasOne(d => d.Clase)
                     .WithMany(p => p.Productos)
-                    .HasForeignKey(d => d.IdClase)
+                    .HasForeignKey(d => d.IdCls)
                     .HasConstraintName("FK_PRODUCTOS_CLASE");
 
                 entity.HasOne(d => d.SubClase)
                     .WithMany(p => p.ProductosSubClase)
-                    .HasForeignKey(d => d.IdSClase)
+                    .HasForeignKey(d => d.IdSCls)
                     .HasConstraintName("FK_PRODUCTOS_SUBCLASE");
 
                 entity.HasOne(d => d.SubSubClase)
                     .WithMany(p => p.ProductosSubSubClase)
-                    .HasForeignKey(d => d.IdSSClase)
+                    .HasForeignKey(d => d.IdSsCls)
                     .HasConstraintName("FK_PRODUCTOS_SSCLASE");
 
                 entity.HasOne(d => d.CCosto)
@@ -285,26 +289,27 @@ namespace CDS_DAL
 
                 entity.HasOne(d => d.ScCosto)
                     .WithMany(p => p.ProductosScCosto)
-                    .HasForeignKey(d => d.IdScc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC })
                     .HasConstraintName("FK_PRODUCTOS_SCCOSTO");
 
                 entity.HasOne(d => d.SscCosto)
                     .WithMany(p => p.ProductosSscCosto)
-                    .HasForeignKey(d => d.IdSscc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC, d.IdSscC })
                     .HasConstraintName("FK_PRODUCTOS_SSCCOSTO");
             });
 
             modelBuilder.Entity<Servicio>(entity =>
             {
-                entity.HasKey(e => e.IdServ);
+                entity.ToTable("Servicio");
+                entity.HasKey(e => e.IdSrv);
 
-                entity.Property(e => e.IdServ).HasColumnName("ID_Serv");
-                entity.Property(e => e.CodComercial).HasColumnName("Cod_Comercial");
-                entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
+                entity.Property(e => e.IdSrv).HasColumnName("Id_Srv");
+                entity.Property(e => e.CodCom1).HasColumnName("CodCom1");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
+                entity.Property(e => e.IdCc).HasColumnName("Id_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScC).HasColumnName("Id_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscC).HasColumnName("Id_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.CCosto)
@@ -314,26 +319,27 @@ namespace CDS_DAL
 
                 entity.HasOne(d => d.ScCosto)
                     .WithMany(p => p.ServiciosScCosto)
-                    .HasForeignKey(d => d.IdScc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC })
                     .HasConstraintName("FK_SERVICIOS_SCCOSTO");
 
                 entity.HasOne(d => d.SscCosto)
                     .WithMany(p => p.ServiciosSscCosto)
-                    .HasForeignKey(d => d.IdSscc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC, d.IdSscC })
                     .HasConstraintName("FK_SERVICIOS_SSCCOSTO");
             });
 
             modelBuilder.Entity<Proyecto>(entity =>
             {
-                entity.HasKey(e => e.IdProy);
+                entity.ToTable("Proyecto");
+                entity.HasKey(e => e.IdPry);
 
-                entity.Property(e => e.IdProy).HasColumnName("ID_Proy");
-                entity.Property(e => e.CodComercial).HasColumnName("Cod_Comercial");
-                entity.Property(e => e.Descripcion).HasColumnName("Descripcion");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
+                entity.Property(e => e.IdPry).HasColumnName("Id_Pry");
+                entity.Property(e => e.CodCom1).HasColumnName("CodComercial");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
+                entity.Property(e => e.IdCc).HasColumnName("Id_CC").HasMaxLength(50);
+                entity.Property(e => e.IdScC).HasColumnName("Id_SCC").HasMaxLength(50);
+                entity.Property(e => e.IdSscC).HasColumnName("Id_SSCC").HasMaxLength(50);
                 entity.Property(e => e.Estado).HasColumnName("Estado");
 
                 entity.HasOne(d => d.CCosto)
@@ -343,73 +349,77 @@ namespace CDS_DAL
 
                 entity.HasOne(d => d.ScCosto)
                     .WithMany(p => p.ProyectosScCosto)
-                    .HasForeignKey(d => d.IdScc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC })
                     .HasConstraintName("FK_PROYECTOS_SCCOSTO");
 
                 entity.HasOne(d => d.SscCosto)
                     .WithMany(p => p.ProyectosSscCosto)
-                    .HasForeignKey(d => d.IdSscc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC, d.IdSscC })
                     .HasConstraintName("FK_PROYECTOS_SSCCOSTO");
             });
 
-            modelBuilder.Entity<TipoDocumento>(entity =>
+            modelBuilder.Entity<TipoDocsIdent>(entity =>
             {
+                entity.ToTable("TipoDocsIdent");
                 entity.HasKey(e => e.IdTdi);
 
-                entity.Property(e => e.IdTdi).HasColumnName("ID_TDI");
-                entity.Property(e => e.DescripcionTdi).HasColumnName("DescripcionTDI");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+                entity.Property(e => e.IdTdi).HasColumnName("Id_TDI");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NomCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
             modelBuilder.Entity<Marca>(entity =>
             {
-                entity.HasKey(e => e.IdMarca);
+                entity.ToTable("Marca");
+                entity.HasKey(e => e.IdMca);
 
-                entity.Property(e => e.IdMarca).HasColumnName("ID_Marca");
-                entity.Property(e => e.NombreMarca).HasColumnName("NombreMarca");
-                entity.Property(e => e.DescripcionMarca).HasColumnName("DescripcionMarca");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.Estado).HasColumnName("Estado");
+                entity.Property(e => e.IdMca).HasColumnName("Id_Mca");
+                entity.Property(e => e.NomMarca).HasColumnName("NomMarca");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
             });
 
-            modelBuilder.Entity<TiposNegocio>(entity =>
+            modelBuilder.Entity<TipoNegocio>(entity =>
             {
+                entity.ToTable("TipoNegocio");
                 entity.HasKey(e => e.IdTn);
 
-                entity.Property(e => e.IdTn).HasColumnName("ID_TN");
-                entity.Property(e => e.DescripcionTn).HasColumnName("DescripcionTN");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+                entity.Property(e => e.IdTn).HasColumnName("Id_TN");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
-            modelBuilder.Entity<StatusOp>(entity =>
+            modelBuilder.Entity<EstadosOp>(entity =>
             {
-                entity.HasKey(e => e.IdStatus);
+                entity.ToTable("EstadosOP");
+                entity.HasKey(e => e.IdEstOp);
 
-                entity.Property(e => e.IdStatus).HasColumnName("ID_Status");
-                entity.Property(e => e.DescripcionStatus).HasColumnName("DescripcionStatus");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
-                entity.Property(e => e.Estado).HasColumnName("Estado");
+                entity.Property(e => e.IdEstOp).HasColumnName("IdEstOP");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
+                //entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
             modelBuilder.Entity<UnidadMedida>(entity =>
             {
+                entity.ToTable("UnidadMedida");
                 entity.HasKey(e => e.IdUm);
 
-                entity.Property(e => e.IdUm).HasColumnName("ID_UM");
-                entity.Property(e => e.NombreUm).HasColumnName("NombreUM");
-                entity.Property(e => e.NomCorto).HasColumnName("NomCorto");
+                entity.Property(e => e.IdUm).HasColumnName("Id_UM");
+                entity.Property(e => e.Nombre).HasColumnName("Nombre");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
             modelBuilder.Entity<Moneda>(entity =>
             {
-                entity.ToTable("MONEDAS");
+                entity.ToTable("Moneda");
                 entity.HasKey(e => e.IdMda);
-                entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
+                entity.Property(e => e.IdMda).HasColumnName("Id_Mda");
                 entity.Property(e => e.Nombre).HasColumnName("Nombre");
-                entity.Property(e => e.Equiv_Sunat).HasColumnName("Equiv_Sunat");
+                entity.Property(e => e.EquivSunat).HasColumnName("Equiv_Sunat");
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
@@ -419,84 +429,100 @@ namespace CDS_DAL
                 .HasValue<SubClase>("SubClase")
                 .HasValue<SubSubClase>("SubSubClase");
 
-            modelBuilder.Entity<CCosto>()
-                .HasDiscriminator<string>("DiscriminatorCosto")
-                .HasValue<CCosto>("CCosto")
-                .HasValue<ScCosto>("ScCosto")
-                .HasValue<SscCosto>("SscCosto");
+            modelBuilder.Entity<ScCosto>(entity =>
+            {
+                entity.ToTable("SCCosto");
+                entity.HasKey(e => new { e.IdCc, e.IdScC });
+
+                entity.HasOne(d => d.CCosto)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdCc)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SCCOSTO_CCOSTO");
+            });
+
+            modelBuilder.Entity<SscCosto>(entity =>
+            {
+                entity.ToTable("SSCCosto");
+                entity.HasKey(e => new { e.IdCc, e.IdScC, e.IdSscC });
+
+                entity.HasOne(d => d.ScCosto)
+                    .WithMany(p => p.SscCosto)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SSCCOSTO_SCCOSTO");
+            });
 
             modelBuilder.Entity<OrdenPedidoDetalle>(entity =>
             {
-                entity.ToTable("ORDEN_PEDIDO_DETALLE");
-                entity.HasKey(e => e.IdOpd);
+                entity.ToTable("OrdPedidoDet");
+                entity.HasKey(e => e.IdOpci);
 
-                entity.Property(e => e.IdOpd).HasColumnName("ID_OPD");
-                entity.Property(e => e.IdOpci).HasColumnName("ID_OPCI");
-                entity.Property(e => e.IdStatus).HasColumnName("ID_Status");
-                entity.Property(e => e.IdTn).HasColumnName("ID_TN");
-                entity.Property(e => e.IdStn).HasColumnName("ID_STN");
-                entity.Property(e => e.IdSstn).HasColumnName("ID_SSTN");
-                entity.Property(e => e.IdProd).HasColumnName("ID_Prod");
-                entity.Property(e => e.IdServ).HasColumnName("ID_Serv");
-                entity.Property(e => e.IdProy).HasColumnName("ID_Proy");
-                entity.Property(e => e.ItemOp).HasColumnName("Item_OP");
-                entity.Property(e => e.CodComercial).HasColumnName("Cod_Comercial");
-                entity.Property(e => e.Cantidad).HasColumnName("Cantidad");
-                entity.Property(e => e.IdUm).HasColumnName("ID_UM");
-                entity.Property(e => e.IdMda).HasColumnName("ID_Mda");
-                entity.Property(e => e.Pvu).HasColumnName("PVU");
+                //entity.Property(e => e.IdOpd).HasColumnName("Id");
+                entity.Property(e => e.IdOpci).HasColumnName("Id_OPCI");
+                entity.Property(e => e.IdPrd).HasColumnName("Id_Prd");
+                entity.Property(e => e.IdSrv).HasColumnName("Id_Srv");
+                entity.Property(e => e.IdPry).HasColumnName("Id_Pry");
+                entity.Property(e => e.ItemOp).HasColumnName("ItemOp");
+                entity.Property(e => e.CodCom1).HasColumnName("CodCom1");
+                entity.Property(e => e.Cant).HasColumnName("Cant");
+                entity.Property(e => e.IdUm).HasColumnName("Id_UM");
+                entity.Property(e => e.IdMda).HasColumnName("Id_Mda");
+                entity.Property(e => e.PreVentUn).HasColumnName("PrecioVentaUnit");
                 entity.Property(e => e.FecReqCli).HasColumnName("FecReqCli");
                 entity.Property(e => e.PtEstimado).HasColumnName("PT_Estimado");
-                entity.Property(e => e.IdTc).HasColumnName("ID_TC");
+                entity.Property(e => e.IdTc).HasColumnName("Id_TC");
+                entity.Property(e => e.IdTn).HasColumnName("Id_TN");
+                entity.Property(e => e.IdStn).HasColumnName("Id_STN");
+                entity.Property(e => e.IdSstn).HasColumnName("Id_SSTN");
                 entity.Property(e => e.TeSem).HasColumnName("TE_Sem");
-                entity.Property(e => e.NumCoti).HasColumnName("Num_Coti");
-                entity.Property(e => e.IbArmado).HasColumnName("IB_Armado");
+                entity.Property(e => e.NumCoti).HasColumnName("NumCoti");
+                entity.Property(e => e.IbArmado).HasColumnName("Ib_Armado");
                 entity.Property(e => e.CodCliente).HasColumnName("Cod_Cliente");
                 entity.Property(e => e.NumDeal).HasColumnName("NumDeal");
-                entity.Property(e => e.NumServicio).HasColumnName("Num_Servicio");
-                entity.Property(e => e.NumProyecto).HasColumnName("Num_Proyecto");
-                entity.Property(e => e.IdCc).HasColumnName("ID_CC").HasMaxLength(50);
-                entity.Property(e => e.IdScc).HasColumnName("ID_SCC").HasMaxLength(50);
-                entity.Property(e => e.IdSscc).HasColumnName("ID_SSCC").HasMaxLength(50);
+                entity.Property(e => e.NumSrv).HasColumnName("NumSrv");
+                entity.Property(e => e.NumPry).HasColumnName("NumPry");
+                entity.Property(e => e.IdCc).HasColumnName("Id_CC");
+                entity.Property(e => e.IdScC).HasColumnName("Id_SCC");
+                entity.Property(e => e.IdSscC).HasColumnName("Id_SSCC");
                 entity.Property(e => e.Nota1).HasColumnName("Nota1");
                 entity.Property(e => e.Nota2).HasColumnName("Nota2");
                 entity.Property(e => e.Nota3).HasColumnName("Nota3");
                 entity.Property(e => e.Nota4).HasColumnName("Nota4");
-                entity.Property(e => e.Estado).HasColumnName("Estado");
 
-                entity.HasOne(d => d.StatusOp)
-                    .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdStatus)
-                    .HasConstraintName("FK_OPDETALLE_STATUS");
+                //entity.HasOne(d => d.EstadosOp)
+                //    .WithMany(p => p.OrdenPedidoDetalle)
+                //    .HasForeignKey(d => d.IdEstOp)
+                //    .HasConstraintName("FK_OPDETALLE_STATUS");
 
-                entity.HasOne(d => d.TiposNegocio)
+                entity.HasOne(d => d.TipoNegocio)
                     .WithMany(p => p.OrdenPedidoDetalle)
                     .HasForeignKey(d => d.IdTn)
                     .HasConstraintName("FK_OPDETALLE_TIPONEGOCIO");
 
                 entity.HasOne(d => d.SubTiposNegocio)
                     .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdStn)
+                    .HasForeignKey(d => new { d.IdTn, d.IdStn })
                     .HasConstraintName("FK_OPDETALLE_STNEGOCIO");
 
                 entity.HasOne(d => d.SubSubTiposNegocio)
                     .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdSstn)
+                    .HasForeignKey(d => new { d.IdTn, d.IdStn, d.IdSstn })
                     .HasConstraintName("FK_OPDETALLE_SSTNEGOCIO");
 
                 entity.HasOne(d => d.Producto)
                     .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdProd)
+                    .HasForeignKey(d => d.IdPrd)
                     .HasConstraintName("FK_OPDETALLE_PRODUCTOS");
 
                 entity.HasOne(d => d.Servicio)
                     .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdServ)
+                    .HasForeignKey(d => d.IdSrv)
                     .HasConstraintName("FK_OPDETALLE_SERVICIOS");
 
                 entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.OrdenPedidoDetalle)
-                    .HasForeignKey(d => d.IdProy)
+                    .HasForeignKey(d => d.IdPry)
                     .HasConstraintName("FK_OPDETALLE_PROYECTOS");
 
                 entity.HasOne(d => d.UnidadMedida)
@@ -514,19 +540,23 @@ namespace CDS_DAL
                     .HasForeignKey(d => d.IdTc)
                     .HasConstraintName("FK_OPDETALLE_TCUSD");
 
+
                 entity.HasOne(d => d.CCosto)
                     .WithMany(p => p.OrdenPedidoDetallesCCosto)
                     .HasForeignKey(d => d.IdCc)
+                    .HasPrincipalKey(p => p.IdCc)
                     .HasConstraintName("FK_OPDETALLE_CCOSTO");
 
                 entity.HasOne(d => d.ScCosto)
                     .WithMany(p => p.OrdenPedidoDetallesScCosto)
-                    .HasForeignKey(d => d.IdScc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC })
+                    .HasPrincipalKey(p => new { p.IdCc, p.IdScC })
                     .HasConstraintName("FK_OPDETALLE_SCCOSTO");
 
                 entity.HasOne(d => d.SscCosto)
                     .WithMany(p => p.OrdenPedidoDetallesSscCosto)
-                    .HasForeignKey(d => d.IdSscc)
+                    .HasForeignKey(d => new { d.IdCc, d.IdScC , d.IdSscC } )
+                    .HasPrincipalKey(p => new { p.IdCc, p.IdScC, p.IdSscC })
                     .HasConstraintName("FK_OPDETALLE_SSCCOSTO");
 
                 entity.HasOne(d => d.OrdenPedido)

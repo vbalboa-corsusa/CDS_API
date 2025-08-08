@@ -4,19 +4,19 @@ namespace CDS_Models.DTOs
 {
     public class ProductoDTO
     {
-        public int IdProd { get; set; }
-        public int? IdMarca { get; set; }
-        public string? CodComercial1 { get; set; }
-        public string? CodComercial2 { get; set; }
-        public string? CodComercial3 { get; set; }
-        public string? Descripcion { get; set; }
-        public string? NomCorto { get; set; }
-        public int? IdClase { get; set; }
-        public int? IdSClase { get; set; }
-        public int? IdSSClase { get; set; }
+        public string? IdPrd { get; set; }
+        public int? IdMca { get; set; }
+        public string? CodCom1 { get; set; }
+        public string? CodCom2 { get; set; }
+        public string? CodCom3 { get; set; }
+        public string? Descrip { get; set; }
+        public string? NCorto { get; set; }
+        public int? IdCls { get; set; }
+        public int? IdSCls { get; set; }
+        public int? IdSsCls { get; set; }
         public string? IdCc { get; set; }
-        public string? IdScc { get; set; }
-        public string? IdSscc { get; set; }
+        public string? IdScC { get; set; }
+        public string? IdSscC { get; set; }
         public bool? Estado { get; set; }
     }
 }

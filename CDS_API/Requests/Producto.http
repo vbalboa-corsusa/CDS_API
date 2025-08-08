@@ -9,19 +9,19 @@ POST http://localhost:5000/Producto
 Content-Type: application/json
 
 {
-  "idMarca": 1,
-  "codComercial1": "C001",
-  "codComercial2": "C002",
-  "codComercial3": "C003",
-  "descripcion": "Producto de prueba",
-  "nomCorto": "Prod1",
-  "idClase": 1,
-  "idSClase": 1,
-  "idSSClase": 1,
-  "idCc": 1,
-  "idScc": 1,
-  "idSscc": 1,
-  "estado": true
+  "IdMca": 1,
+  "CodCom1": "C001",
+  "CodCom2": "C002",
+  "CodCom3": "C003",
+  "Descrip": "Producto de prueba",
+  "NCorto": "Prod1",
+  "IdCls": 1,
+  "IdSCls": 1,
+  "IdSSCls": 1,
+  "IdCc": 1,
+  "IdScC": 1,
+  "IdSscC": 1,
+  "Estado": true
 }
 
 ### Actualizar un producto existente
@@ -29,20 +29,20 @@ PUT http://localhost:5000/Producto/1
 Content-Type: application/json
 
 {
-  "idProd": 1,
-  "idMarca": 1,
-  "codComercial1": "C001",
-  "codComercial2": "C002",
-  "codComercial3": "C003",
-  "descripcion": "Producto actualizado",
-  "nomCorto": "Prod1",
-  "idClase": 1,
-  "idSClase": 1,
-  "idSSClase": 1,
-  "idCc": 1,
-  "idScc": 1,
-  "idSscc": 1,
-  "estado": true
+  "IdPrd": 1,
+  "IdMca": 1,
+  "CodCom1": "C001",
+  "CodCom2": "C002",
+  "CodCom3": "C003",
+  "Descrip": "Producto actualizado",
+  "NCorto": "Prod1",
+  "IdCls": 1,
+  "IdSCls": 1,
+  "IdSSCls": 1,
+  "IdCc": 1,
+  "IdScC": 1,
+  "IdSscC": 1,
+  "Estado": true
 }
 
 ### Eliminar un producto

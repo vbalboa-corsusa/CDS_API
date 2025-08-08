@@ -4,8 +4,8 @@ namespace CDS_Models.DTOs
     {
         public int IdStn { get; set; }
         public int? IdTn { get; set; }
-        public string? DescripcionStn { get; set; }
-        public string? NomCorto { get; set; }
+        public string? Descripc { get; set; }
+        public string? NCorto { get; set; }
         public bool? Estado { get; set; }
     }
 }

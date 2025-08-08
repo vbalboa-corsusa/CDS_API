@@ -4,30 +4,29 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
+    [Table("Servicio")]
     public class Servicio
     {
-        [Key]
-        public int IdServ { get; set; }
+        [Key, Column("Id_Srv", TypeName = "char(10)")]
+        public string? IdSrv { get; set; }
 
         [StringLength(50)]
-        public string? CodComercial { get; set; }
+        public string? CodCom1 { get; set; }
 
-        [StringLength(50)]
-        public string? Descripcion { get; set; }
+        [StringLength(200)]
+        public string? Descrip { get; set; }
 
         [StringLength(10)]
-        public string? NomCorto { get; set; }
+        public string? NCorto { get; set; }
         public string? IdCc { get; set; }
-        public string? IdScc { get; set; }
-        public string? IdSscc { get; set; }
+        public string? IdScC { get; set; }
+        public string? IdSscC { get; set; }
         public bool? Estado { get; set; }
         public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
 
         [ForeignKey("IdCc")]
         public CCosto? CCosto { get; set; }
-        [ForeignKey("IdScc")]
         public ScCosto? ScCosto { get; set; }
-        [ForeignKey("IdSscc")]
         public SscCosto? SscCosto { get; set; }
     }
 }

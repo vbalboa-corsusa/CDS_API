@@ -4,32 +4,35 @@ using CDS_Models.Entities;
 
 namespace CDS_Models
 {
+    [Table("Proyecto")]
     public class Proyecto
     {
-        [Key]
-        public int IdProy { get; set; }
+        [Key, Column("Id_Pry", TypeName = "char(10)")]
+        public string? IdPry { get; set; }
 
         [StringLength(50)]
-        public string? CodComercial { get; set; }
+        public string? CodCom1 { get; set; }
 
-        [StringLength(50)]
-        public string? Descripcion { get; set; }
+        [StringLength(200)]
+        public string? Descrip { get; set; }
 
         [StringLength(10)]
-        public string? NomCorto { get; set; }
+        public string? NCorto { get; set; }
+
         public string? IdCc { get; set; }
         [Column("ID_SCC")]
-        public string? IdScc { get; set; }
+        public string? IdScC { get; set; }
         [Column("ID_SSCC")]
-        public string? IdSscc { get; set; }
+        public string? IdSscC { get; set; }
         public bool? Estado { get; set; }
-        public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
 
         [ForeignKey("IdCc")]
         public CCosto? CCosto { get; set; }
-        [ForeignKey("IdScc")]
+        
         public ScCosto? ScCosto { get; set; }
-        [ForeignKey("IdSscc")]
+
         public SscCosto? SscCosto { get; set; }
+
+        public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalle { get; set; }
     }
 }

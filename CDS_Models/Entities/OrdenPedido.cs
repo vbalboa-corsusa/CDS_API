@@ -5,63 +5,80 @@ using CDS_Models.Entities;
 
 namespace CDS_Models.Entities
 {
-public class OrdenPedido
+    [Table("OrdPedido")]
+    public class OrdenPedido
     {
-        [Key]
-        public int IdOpci { get; set; }
+        [Key, Column("Id_OPCI")]
+        public string? IdOpci { get; set; }
 
-        public int? IdFp { get; set; }
-        public int? IdCliente { get; set; }
-        public int? IdVendedor { get; set; }
-        public int? IdOpd { get; set; }
-        public DateTime? FecRecepcion { get; set; }
+        public DateTime? FecRecep { get; set; }
         public DateTime? FecInicio { get; set; }
+
+        [Column("FecProcVI")]
         public DateTime? FecProcVi { get; set; }
 
-        [StringLength(100)]
-        public string? RazonSocialCliente { get; set; }
-
-        [StringLength(200)]
+        [Column("NumOP", TypeName = "nvarchar(100)")]
         public string? NumOp { get; set; }
+
+        [Column("Id_Mda")]
         public int? IdMda { get; set; }
+
+        [Column("Id_FP")]
+        public int? IdFp { get; set; }
+
+        [Column("Id_Clt", TypeName = "char(10)")]
+        public string? IdClt { get; set; }
+
+        [Column("RSocialClt", TypeName = "nvarchar(100)")]
+        public string? RsocialClt { get; set; }
+
+        [Column("Id_Vdr")]
+        public string IdVdr { get; set; } = null!;
+
+        [Column("NomVdr")]
+        public string? NomVdr { get; set; }
+
+        [Column("TotalSinIGV", TypeName = "numeric(9, 2)")]
         public decimal? TotalSinIgv { get; set; }
 
-        [StringLength(50)]
+        [Column("NumRefCliente", TypeName = "nvarchar(100)")]
         public string? NumRefCliente { get; set; }
 
-        [StringLength(100)]
-        public string? ClienteFinal { get; set; }
+        [Column("Ib_CltFinal", TypeName = "nvarchar(100)")]
+        public string? IbCltFin { get; set; }
 
-        [StringLength(100)]
-        public string? ClienteProveedor { get; set; }
+        [Column("Ib_CltPrv", TypeName = "nvarchar(100)")]
+        public string? IbCltPrv { get; set; }
 
-        [StringLength(50)]
-        public string? Vendedor1 { get; set; }
+        [Column("Ib_Vdr1")]
+        public int? IbVdr1 { get; set; }
 
-        [StringLength(50)]
-        public string? Vendedor2 { get; set; }
+        [Column("Ib_Vdr2")]
+        public int? IbVdr2 { get; set; }
 
-        [StringLength(50)]
-        public string? Lider { get; set; }
+        [Column("Ib_Lider")]
+        public int? IbLider { get; set; }
 
         [StringLength(10)]
         public string? UbrutaCoti { get; set; }
 
-        public bool? ComisionCompartida { get; set; }
+        [StringLength(50)]
+        public string? ComisionCompartida { get; set; }
+
         public bool? Estado { get; set; }
 
         [ForeignKey("IdFp")]
-        public FormaPago? FormaPago { get; set; }
+        public virtual FormaPago? FormaPago { get; set; }
 
-        [ForeignKey("IdCliente")]
-        public Cliente? Cliente { get; set; }
+        [ForeignKey("IdClt")]
+        public virtual Cliente? Cliente { get; set; }
 
-        [ForeignKey("IdVendedor")]
-        public Vendedor? Vendedor { get; set; }
+        [ForeignKey("IdVdr")]
+        public virtual Vendedor? Vendedor { get; set; }
 
         [ForeignKey("IdMda")]
-        public Moneda? Moneda { get; set; }
+        public virtual Moneda? Moneda { get; set; }
 
-        public ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalles { get; set; }
+        public virtual ICollection<OrdenPedidoDetalle>? OrdenPedidoDetalles { get; set; }
     }
 }

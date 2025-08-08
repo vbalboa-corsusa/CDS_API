@@ -4,16 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CDS_Models
 {
+    [Table("Cat_Forma_Pago")]
     public class CatFormaPago
     {
-        [Key]
-        public int IdCfp { get; set; }
+        [Key, Column("Id_CFP")]
+        public int? IdCfp { get; set; }
 
-        [StringLength(100)]
-        public string? DescripcionCfp { get; set; }
+        [StringLength(20)]
+        public string? Descripc { get; set; }
 
         [StringLength(10)]
-        public string? NomCorto { get; set; }
+        public string? NCorto { get; set; }
         public bool? Estado { get; set; }
 
         public ICollection<FormaPago>? FormaPago { get; set; }
