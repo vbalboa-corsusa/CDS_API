@@ -6,110 +6,65 @@ using CDS_Models.DTOs;
 using CDS_Models;
 using CDS_DAL;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace CDS_BLL.Services
 {
     public class ProductoService : IProductoService
     {
         private readonly LogistContext _context;
-        public ProductoService(LogistContext context)
+        private readonly IMapper _mapper;
+
+        public ProductoService(LogistContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<ProductoDTO>> GetAllAsync()
         {
-            return await _context.Productos
-                .Select(p => new ProductoDTO
-                {
-                    IdPrd = p.IdPrd,
-                    IdMca = p.IdMca,
-                    CodCom1 = p.CodCom1,
-                    CodCom2 = p.CodCom2,
-                    CodCom3 = p.CodCom3,
-                    Descrip = p.Descrip,
-                    NCorto = p.NCorto,
-                    IdCls = p.IdCls,
-                    IdSCls = p.IdSCls,
-                    IdSsCls = p.IdSsCls,
-                    IdCc = p.IdCc,
-                    IdScC = p.IdScC,
-                    IdSscC = p.IdSscC,
-                    Estado = p.Estado
-                })
-                .ToListAsync();
+            var productos = await _context.Productos.ToListAsync();
+            return _mapper.Map<IEnumerable<ProductoDTO>>(productos);
         }
 
-        public async Task<ProductoDTO?> GetByIdAsync(int id)
+        public async Task<ProductoDTO?> GetByIdAsync(string id)
         {
-            var p = await _context.Productos.FindAsync(id);
-            if (p == null) return null;
-            return new ProductoDTO
-            {
-                IdPrd = p.IdPrd,
-                IdMca = p.IdMca,
-                CodCom1 = p.CodCom1,
-                CodCom2 = p.CodCom2,
-                CodCom3 = p.CodCom3,
-                Descrip = p.Descrip,
-                NCorto = p.NCorto,
-                IdCls = p.IdCls,
-                IdSCls = p.IdSCls,
-                IdSsCls = p.IdSsCls,
-                IdCc = p.IdCc,
-                IdScC = p.IdScC,
-                IdSscC = p.IdSscC,
-                Estado = p.Estado
-            };
+            var producto = await _context.Productos.FindAsync(id);
+            if (producto == null) return null;
+            return _mapper.Map<ProductoDTO>(producto);
         }
 
         public async Task<ProductoDTO> CreateAsync(ProductoDTO dto)
         {
-            var entity = new Producto
+            string? lastId = await _context.Productos
+                .OrderByDescending(p => p.IdPrd)
+                .Select(p => p.IdPrd)
+                .FirstOrDefaultAsync();
+
+            int maxId = 0;
+            if (!string.IsNullOrEmpty(lastId))
             {
-                IdPrd = dto.IdPrd,
-                IdMca = dto.IdMca,
-                CodCom1 = dto.CodCom1,
-                CodCom2 = dto.CodCom2,
-                CodCom3 = dto.CodCom3,
-                Descrip = dto.Descrip,
-                NCorto = dto.NCorto,
-                IdCls = dto.IdCls,
-                IdSCls = dto.IdSCls,
-                IdSsCls = dto.IdSsCls,
-                IdCc = dto.IdCc,
-                IdScC = dto.IdScC,
-                IdSscC = dto.IdSscC,
-                Estado = dto.Estado
-            };
+                maxId = int.Parse(lastId.Substring(3));
+            }
+
+            var entity = _mapper.Map<Producto>(dto);
+            entity.IdPrd = "PRD" + (maxId + 1).ToString("D7");
             _context.Productos.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdPrd = entity.IdPrd;
-            return dto;
+            return _mapper.Map<ProductoDTO>(entity);
         }
 
-        public async Task<bool> UpdateAsync(int id, ProductoDTO dto)
+        public async Task<bool> UpdateAsync(string id, ProductoDTO dto)
         {
             var entity = await _context.Productos.FindAsync(id);
             if (entity == null) return false;
-            entity.IdMca = dto.IdMca;
-            entity.CodCom1 = dto.CodCom1;
-            entity.CodCom2 = dto.CodCom2;
-            entity.CodCom3 = dto.CodCom3;
-            entity.Descrip = dto.Descrip;
-            entity.NCorto = dto.NCorto;
-            entity.IdCls = dto.IdCls;
-            entity.IdSCls = dto.IdSCls;
-            entity.IdSsCls = dto.IdSsCls;
-            entity.IdCc = dto.IdCc;
-            entity.IdScC = dto.IdScC;
-            entity.IdSscC = dto.IdSscC;
-            entity.Estado = dto.Estado;
+
+            _mapper.Map(dto, entity);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             var entity = await _context.Productos.FindAsync(id);
             if (entity == null) return false;

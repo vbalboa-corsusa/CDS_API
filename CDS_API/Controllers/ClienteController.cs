@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Linq;
+using AutoMapper;
 
 namespace CDS_API.Controllers
 {
@@ -15,9 +16,11 @@ namespace CDS_API.Controllers
     public class ClienteController : ControllerBase
     {
         private readonly IClienteService _service;
-        public ClienteController(IClienteService service)
+        private readonly IMapper _mapper;
+        public ClienteController(IClienteService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -87,4 +90,4 @@ namespace CDS_API.Controllers
             return NoContent();
         }
     }
-} 
+}

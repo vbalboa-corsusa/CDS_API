@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Linq;
+using AutoMapper;
 
 namespace CDS_API.Controllers
 {
@@ -15,9 +16,12 @@ namespace CDS_API.Controllers
     public class ProductoController : ControllerBase
     {
         private readonly IProductoService _service;
-        public ProductoController(IProductoService service)
+
+        private readonly IMapper _mapper;
+        public ProductoController(IProductoService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper; // Inyecta el mapeador de AutoMapper
         }
 
         [HttpGet]
@@ -28,7 +32,7 @@ namespace CDS_API.Controllers
         {
             System.Console.WriteLine("[LOG] GET /Producto llamado");
             try
-            {
+            {   
                 var productos = await _service.GetAllAsync();
                 System.Console.WriteLine($"[LOG] Productos encontrados: {productos.Count()}");
                 return Ok(productos);
@@ -44,7 +48,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Obtiene un producto por ID")]
         [SwaggerResponse(200, "Producto encontrado", typeof(ProductoDTO))]
         [SwaggerResponse(404, "Producto no encontrado")]
-        public async Task<ActionResult<ProductoDTO>> GetById(int id)
+        public async Task<ActionResult<ProductoDTO>> GetById(string id)
         {
             var producto = await _service.GetByIdAsync(id);
             if (producto == null) return NotFound();
@@ -65,7 +69,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Actualiza un producto existente")]
         [SwaggerResponse(204, "Producto actualizado")]
         [SwaggerResponse(400, "ID no coincide")]
-        public async Task<IActionResult> Update(int id, ProductoDTO dto)
+        public async Task<IActionResult> Update(string id, ProductoDTO dto)
         {
             if (dto.IdPrd == null || id.ToString() != dto.IdPrd) return BadRequest();
             var ok = await _service.UpdateAsync(id, dto);
@@ -77,7 +81,7 @@ namespace CDS_API.Controllers
         [SwaggerOperation(Summary = "Elimina un producto por ID")]
         [SwaggerResponse(204, "Producto eliminado")]
         [SwaggerResponse(404, "Producto no encontrado")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             var ok = await _service.DeleteAsync(id);
             if (!ok) return NotFound();

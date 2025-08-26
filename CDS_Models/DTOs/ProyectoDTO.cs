@@ -2,7 +2,7 @@ namespace CDS_Models.DTOs
 {
     public class ProyectoDTO
     {
-        public int IdProy { get; set; }
+        public string? IdPry { get; set; }
         public string? CodCom1 { get; set; }
         public string? Descrip { get; set; }
         public string? NCorto { get; set; }

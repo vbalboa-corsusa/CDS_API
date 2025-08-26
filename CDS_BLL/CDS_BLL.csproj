@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CDS_Models\CDS_Models.csproj" />
     <ProjectReference Include="..\CDS_DAL\CDS_DAL.csproj" />
   </ItemGroup>

@@ -4,6 +4,9 @@ using CDS_Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Linq;
+using AutoMapper;
 
 namespace CDS_API.Controllers
 {
@@ -13,9 +16,11 @@ namespace CDS_API.Controllers
     public class VendedorController : ControllerBase
     {
         private readonly IVendedorService _service;
-        public VendedorController(IVendedorService service)
+        private readonly IMapper _mapper;
+        public VendedorController(IVendedorService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -33,9 +38,7 @@ namespace CDS_API.Controllers
             catch (Exception ex)
             {
                 System.Console.WriteLine($"[ERROR] GET /Vendedor: {ex.Message}\n{ex.StackTrace}");
-                // Loguea el error en consola (Railway lo mostrará en los logs)
-                Console.WriteLine("ERROR EN /Vendedor: " + ex.ToString());
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, $"Error interno: {ex.Message}");
             }
         }
 
@@ -87,4 +90,4 @@ namespace CDS_API.Controllers
             return NoContent();
         }
     }
-} 
+}

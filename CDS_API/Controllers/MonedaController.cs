@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using CDS_DAL;
+using CDS_BLL.Interfaces;
+using CDS_Models.DTOs;
 using System.Collections.Generic;
-using CDS_Models;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace CDS_API.Controllers
@@ -12,30 +12,25 @@ namespace CDS_API.Controllers
     [SwaggerTag("Gestión de monedas")]
     public class MonedaController : ControllerBase
     {
-        private readonly LogistContext _context;
+        private readonly IMonedaService _monedaService;
 
-        public MonedaController(LogistContext context)
+        public MonedaController(IMonedaService monedaService)
         {
-            _context = context;
+            _monedaService = monedaService;
         }
 
         [HttpGet]
         [SwaggerOperation(Summary = "Obtiene todas las monedas")]
-        [SwaggerResponse(200, "Lista de monedas obtenida exitosamente", typeof(IEnumerable<Moneda>))]
+        [SwaggerResponse(200, "Lista de monedas obtenida exitosamente", typeof(IEnumerable<MonedaDTO>))]
         [SwaggerResponse(404, "No se encontraron monedas")]
-        public async Task<ActionResult<IEnumerable<Moneda>>> GetMonedas()
+        public async Task<ActionResult<IEnumerable<MonedaDTO>>> GetMonedas()
         {
             System.Console.WriteLine("[LOG] GET /Moneda llamado");
             try
             {
-                if (_context.Monedas == null)
-                {
-                    System.Console.WriteLine("[LOG] _context.Monedas es null");
-                    return NotFound();
-                }
-                var monedas = await _context.Monedas.ToListAsync();
-                System.Console.WriteLine($"[LOG] Monedas encontradas: {monedas.Count}");
-                return monedas;
+                var monedas = await _monedaService.GetAllAsync();
+                System.Console.WriteLine($"[LOG] Monedas encontradas: {monedas.Count()}");
+                return Ok(monedas);
             }
             catch (Exception ex)
             {

@@ -7,8 +7,10 @@ namespace CDS_Models.Entities
     public class FormaPago
     {
         [Key, Column("Id_FP")]
-        public int? IdFp { get; set; }
-        public int? IdCfp { get; set; }
+        public int IdFp { get; set; }
+        
+        [ForeignKey ("CatFormaPago")]
+        public int IdCfp { get; set; }
 
         [StringLength(100)]
         public string? Descrip { get; set; }
@@ -19,5 +21,7 @@ namespace CDS_Models.Entities
         public bool? Estado { get; set; }
 
         public ICollection<OrdenPedido>? OrdenesPedido { get; set; }
+        public CatFormaPago? CatFormaPago { get; set; }
+
     }
 }

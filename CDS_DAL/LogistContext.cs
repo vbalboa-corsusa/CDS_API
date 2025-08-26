@@ -28,8 +28,9 @@ namespace CDS_DAL
         public  DbSet<SubTipoNegocio> SubTiposNegocio { get; set; }
         public  DbSet<TipoNegocio> TipoNegocio { get; set; }
         public  DbSet<SubSubTipoNegocio> SubSubTiposNegocio { get; set; }
-        public  DbSet<EstadosOp> EstadosOp { get; set; }
+        public  DbSet<EstadosOp> StatusOp { get; set; }
         public  DbSet<FormaPago> FormaPago { get; set; }
+        public  DbSet<CatFormaPago> CatFormaPago { get; set; }
         public  DbSet<UnidadMedida> UnidadesMedida { get; set; }
         public  DbSet<ProdUm> ProdUm { get; set; }
         public  DbSet<TcUsd> TcUsd { get; set; }
@@ -226,6 +227,21 @@ namespace CDS_DAL
                 entity.Property(e => e.Estado).HasColumnName("Estado");
             });
 
+            modelBuilder.Entity<CatFormaPago>(static entity =>
+            {
+                entity.ToTable("Cat_Forma_Pago");
+                entity.HasKey(e => e.IdCfp);
+
+                entity.Property(e => e.IdCfp).HasColumnName("Id_CFP");
+                entity.Property(e => e.Descrip).HasColumnName("Descrip");
+                entity.Property(e => e.NCorto).HasColumnName("NCorto");
+                entity.Property(e => e.Estado).HasColumnName("Estado");
+                entity.HasMany(cfp => cfp.FormaPago)
+                    .WithOne(fp => fp.CatFormaPago)
+                    .HasForeignKey(fp => fp.IdCfp)
+                    .HasConstraintName("FK_FORMAPAGO_CATFORMAPAGO");
+            });
+
             modelBuilder.Entity<TcUsd>(entity =>
             {
                 entity.ToTable("TipoCambio");
@@ -396,7 +412,7 @@ namespace CDS_DAL
                 entity.ToTable("EstadosOP");
                 entity.HasKey(e => e.IdEstOp);
 
-                entity.Property(e => e.IdEstOp).HasColumnName("IdEstOP");
+                entity.Property(e => e.IdEstOp).HasColumnName("Id_EstOP");
                 entity.Property(e => e.Descrip).HasColumnName("Descrip");
                 entity.Property(e => e.NCorto).HasColumnName("NCorto");
                 //entity.Property(e => e.Estado).HasColumnName("Estado");

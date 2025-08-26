@@ -1,6 +1,6 @@
 namespace CDS_Models.DTOs
 {
-    public class TipoDocumentoDTO
+    public class TipoDocsIdentDTO
     {
         public int IdTdi { get; set; }
         public string? Descrip { get; set; }

@@ -6,83 +6,62 @@ using CDS_Models.DTOs;
 using CDS_Models;
 using CDS_DAL;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using CDS_Models.Entities;
 
 namespace CDS_BLL.Services
 {
     public class VendedorService : IVendedorService
     {
         private readonly LogistContext _context;
-        public VendedorService(LogistContext context)
+        private readonly IMapper _mapper;
+        public VendedorService(LogistContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<VendedorDTO>> GetAllAsync()
         {
-            return await _context.Vendedores
-                .Select(v => new VendedorDTO
-                {
-                    IdVdr = v.IdVdr,
-                    IdTdi = v.IdTdi,
-                    NDoc = v.NDoc,
-                    NomVdr = v.NomVdr,
-                    IbLider = v.IbLider,
-                    Estado = v.Estado
-                })
-                .ToListAsync();
+            var vendedores = await _context.Vendedores.ToListAsync();
+            return _mapper.Map<IEnumerable<VendedorDTO>>(vendedores);
         }
 
         public async Task<VendedorDTO?> GetByIdAsync(string id)
         {
-            var v = await _context.Vendedores.FindAsync(id);
-            if (v == null) return null;
-            return new VendedorDTO
-            {
-                IdVdr = v.IdVdr,
-                IdTdi = v.IdTdi,
-                NDoc = v.NDoc,
-                NomVdr = v.NomVdr,
-                IbLider = v.IbLider,
-                Estado = v.Estado
-            };
+            var vendedor = await _context.Vendedores.FindAsync(id);
+            if (vendedor == null) return null;
+            return _mapper.Map<VendedorDTO>(vendedor);
         }
 
         public async Task<VendedorDTO> CreateAsync(VendedorDTO dto)
         {
+            // Obtiene el último IdVdr existente
+            string? lastId = await _context.Vendedores
+                .OrderByDescending(v => v.IdVdr)
+                .Select(v => v.IdVdr)
+                .FirstOrDefaultAsync();
+
             // Obtener el máximo IdVendedor existente (incluyendo eliminados lógicamente)
             int maxId = 0;
-            if (await _context.Vendedores.AnyAsync())
+            if (!string.IsNullOrEmpty(lastId))
             {
-                maxId = await _context.Vendedores
-                    .Select(v => int.Parse(v.IdVdr.Substring(3))) // Extraer el número del IdVdr
-                    .MaxAsync();
+                maxId = int.Parse(lastId.Substring(3)); // Extraer el número del IdVdr
             }
-            var entity = new Vendedor
-            {
-                IdVdr = "VDR" + (maxId + 1).ToString("D7"),// Para convertir Id a formato 'VDR0000001'
-                IdTdi = dto.IdTdi,
-                NDoc = dto.NDoc,
-                NomVdr = dto.NomVdr,
-                IbLider = dto.IbLider,
-                Estado = dto.Estado
-            };
+            var entity = _mapper.Map<Vendedor>(dto);
+            entity.IdVdr = "VDR" + (maxId + 1).ToString("D7");// Para convertir Id a formato 'VDR0000001'
             _context.Vendedores.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdVdr = entity.IdVdr;
-            return dto;
+            return _mapper.Map<VendedorDTO>(entity);
         }
 
         public async Task<bool> UpdateAsync(string id, VendedorDTO dto)
         {
             var entity = await _context.Vendedores.FindAsync(id);
             if (entity == null) return false;
-            entity.IdTdi = dto.IdTdi;
-            entity.NDoc = dto.NDoc;
-            entity.NomVdr = dto.NomVdr;
-            entity.IbLider = dto.IbLider;
-            entity.Estado = dto.Estado;
+            _mapper.Map(dto, entity);
             await _context.SaveChangesAsync();
-            return true;
+            return true;// Indica que la actualización fue exitosa
         }
 
         public async Task<bool> DeleteAsync(string id)
@@ -94,4 +73,4 @@ namespace CDS_BLL.Services
             return true;
         }
     }
-} 
+}

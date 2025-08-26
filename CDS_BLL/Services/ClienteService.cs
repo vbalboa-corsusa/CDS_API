@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using CDS_Models.Entities;
+using AutoMapper;
 
 namespace CDS_BLL.Services
 {
     public class ClienteService : IClienteService
     {
         private readonly LogistContext _context;
+        private readonly IMapper _mapper;
 
-        public ClienteService(LogistContext context)
+        public ClienteService(LogistContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<ClienteDTO>> GetAllAsync()
@@ -26,20 +29,8 @@ namespace CDS_BLL.Services
             {
                 var count = await _context.Clientes.CountAsync();
                 System.Console.WriteLine($"CLIENTE count: {count}"); // Log para Railway
-                return await _context.Clientes
-                    .Select(c => new ClienteDTO
-                    {
-                        IdClt = c.IdClt,
-                        IdTdi = c.IdTdi,
-                        RazonSocial = c.RazonSocial,
-                        CorreoClt = c.CorreoClt,
-                        NDoc = c.NDoc,
-                        TelefClt = c.TelefClt,
-                        DirecClt = c.DirecClt,
-                        IbCltPrv = c.IbCltPrv,
-                        IbCltFinal = c.IbCltFinal
-                    })
-                    .ToListAsync();
+                var clientes = await _context.Clientes.ToListAsync();
+                return _mapper.Map<IEnumerable<ClienteDTO>>(clientes);
             }
             catch (Exception ex)
             {
@@ -50,53 +41,35 @@ namespace CDS_BLL.Services
 
         public async Task<ClienteDTO?> GetByIdAsync(string id)
         {
-            var c = await _context.Clientes.FindAsync(id);
-            if (c == null) return null;
-            return new ClienteDTO
-            {
-                IdClt = c.IdClt,
-                IdTdi = c.IdTdi,
-                RazonSocial = c.RazonSocial,
-                CorreoClt = c.CorreoClt,
-                NDoc = c.NDoc,
-                TelefClt = c.TelefClt,
-                DirecClt = c.DirecClt,
-                IbCltPrv = c.IbCltPrv,
-                IbCltFinal = c.IbCltFinal
-            };
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null) return null;
+            return _mapper.Map<ClienteDTO>(cliente);
         }
 
         public async Task<ClienteDTO> CreateAsync(ClienteDTO dto)
         {
-            var entity = new Cliente
+            string? lastId = await _context.Clientes
+                .OrderByDescending(c => c.IdClt)
+                .Select(c => c.IdClt)
+                .FirstOrDefaultAsync();
+
+            int maxId = 0;
+            if (!string.IsNullOrEmpty(lastId))
             {
-                IdTdi = dto.IdTdi,
-                RazonSocial = dto.RazonSocial,
-                CorreoClt = dto.CorreoClt,
-                NDoc = dto.NDoc,
-                TelefClt = dto.TelefClt,
-                DirecClt = dto.DirecClt,
-                IbCltPrv = dto.IbCltPrv,
-                IbCltFinal = dto.IbCltFinal
-            };
+                maxId = int.Parse(lastId.Substring(3));
+            }
+            var entity = _mapper.Map<Cliente>(dto);
+            entity.IdClt = "CLT" + (maxId + 1).ToString("D7");
             _context.Clientes.Add(entity);
             await _context.SaveChangesAsync();
-            dto.IdClt = entity.IdClt;
-            return dto;
+            return _mapper.Map<ClienteDTO>(entity);
         }
 
         public async Task<bool> UpdateAsync(string id, ClienteDTO dto)
         {
             var entity = await _context.Clientes.FindAsync(id);
             if (entity == null) return false;
-            entity.IdTdi = dto.IdTdi;
-            entity.RazonSocial = dto.RazonSocial;
-            entity.CorreoClt = dto.CorreoClt;
-            entity.NDoc = dto.NDoc;
-            entity.TelefClt = dto.TelefClt;
-            entity.DirecClt = dto.DirecClt;
-            entity.IbCltPrv = dto.IbCltPrv;
-            entity.IbCltFinal = dto.IbCltFinal;
+            _mapper.Map(dto, entity);
             await _context.SaveChangesAsync();
             return true;
         }

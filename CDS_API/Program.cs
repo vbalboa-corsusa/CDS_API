@@ -1,7 +1,10 @@
 using CDS_DAL;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
+using CDS_Models;
+using CDS_Models.Mappings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,9 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 });
+
+// Configuración de AutoMapper
+builder.Services.AddAutoMapper(cfg => { }, typeof(ProyectoProfile), typeof(MonedaProfile), typeof(ClienteProfile), typeof(VendedorProfile), typeof(TipoDocumentoProfile), typeof(MarcaProfile), typeof(SubTipoNegocioProfile), typeof(TipoNegocioProfile), typeof(SubSubTipoNegocioProfile), typeof(StatusOpProfile), typeof(FormaPagoProfile), typeof(CatFormaPagoProfile));
 
 // Lógica para usar BD_LOGISTICA_LOCAL en local, y Railway/Azure en producción
 string connectionString;
@@ -55,6 +61,15 @@ builder.Services.AddScoped<CDS_BLL.Interfaces.IVendedorService, CDS_BLL.Services
 builder.Services.AddScoped<CDS_BLL.Interfaces.IProductoService, CDS_BLL.Services.ProductoService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.ILoginService, CDS_BLL.Services.LoginService>();
 builder.Services.AddScoped<CDS_BLL.Interfaces.IClienteService, CDS_BLL.Services.ClienteService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.IMonedaService, CDS_BLL.Services.MonedaService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.ITipoDocumentoService, CDS_BLL.Services.TipoDocumentoService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.IMarcaService, CDS_BLL.Services.MarcaService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.ISubTipoNegocioService, CDS_BLL.Services.SubTipoNegocioService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.ITipoNegocioService, CDS_BLL.Services.TipoNegocioService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.ISubSubTipoNegocioService, CDS_BLL.Services.SubSubTipoNegocioService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.IStatusOpService, CDS_BLL.Services.StatusOpService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.IFormaPagoService, CDS_BLL.Services.FormaPagoService>();
+builder.Services.AddScoped<CDS_BLL.Interfaces.ICatFormaPagoService, CDS_BLL.Services.CatFormaPagoService>();
 
 // Configuración de CORS
 builder.Services.AddCors(options =>
@@ -108,8 +123,6 @@ app.UseHttpsRedirection(); // Redirige HTTP a HTTPS
 
 // Usar CORS antes de Authorization
 app.UseCors("AllowReactApp");
-
-app.UseAuthorization();
 
 app.MapControllers();
 

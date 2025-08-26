@@ -8,10 +8,10 @@ namespace CDS_Models
     public class CatFormaPago
     {
         [Key, Column("Id_CFP")]
-        public int? IdCfp { get; set; }
+        public int IdCfp { get; set; }
 
         [StringLength(20)]
-        public string? Descripc { get; set; }
+        public string? Descrip { get; set; }
 
         [StringLength(10)]
         public string? NCorto { get; set; }
