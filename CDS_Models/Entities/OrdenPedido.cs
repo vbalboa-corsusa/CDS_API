@@ -63,7 +63,7 @@ namespace CDS_Models.Entities
         public string? UbrutaCoti { get; set; }
 
         [StringLength(50)]
-        public string? ComisionCompartida { get; set; }
+        public bool? ComisionCompartida { get; set; }
 
         public bool? Estado { get; set; }
 
