@@ -9,26 +9,25 @@ POST http://localhost:5000/OrdenPedido
 Content-Type: application/json
 
 {
-  "idOpci": 0,
-  "idFp": 1,
-  "idCliente": 1,
-  "idVendedor": 1,
-  "idOpd": 1,
+  "idOpci": "OP001",
   "fecRecepcion": "2024-01-01T00:00:00",
   "fecInicio": "2024-01-02T00:00:00",
   "fecProcVi": "2024-01-03T00:00:00",
-  "razonSocialCliente": "Cliente de Prueba",
   "numOp": "OP-001",
   "idMda": 1,
+  "idFp": 1,
+  "idClt": "clientes",
+  "razonSocialClt": "Cliente de Prueba",
+  "idVdr": "vendetest",
   "totalSinIgv": 1000.00,
   "numRefCliente": "REF-001",
   "clienteFinal": "Cliente Final",
   "clienteProveedor": "Proveedor",
-  "vendedor1": "Vendedor 1",
-  "vendedor2": "Vendedor 2",
-  "lider": "Líder",
+  "ibVdr1": 1,
+  "ibVdr2": 2,
+  "iblider": 1,
   "ubrutaCoti": "UC001",
-  "comisionCompartida": "Comisión",
+  "comisionCompartida": true,
   "estado": true
 }
 
@@ -38,25 +37,24 @@ Content-Type: application/json
 
 {
   "idOpci": 1,
-  "idFp": 1,
-  "idCliente": 1,
-  "idVendedor": 1,
-  "idOpd": 1,
   "fecRecepcion": "2024-01-01T00:00:00",
   "fecInicio": "2024-01-02T00:00:00",
   "fecProcVi": "2024-01-03T00:00:00",
   "razonSocialCliente": "Cliente Actualizado",
   "numOp": "OP-001",
   "idMda": 1,
+  "idFp": 1,
+  "idClt": "clientes",
+  "razonSocialClt": "Cliente de Prueba",
   "totalSinIgv": 2000.00,
   "numRefCliente": "REF-001",
   "clienteFinal": "Cliente Final",
   "clienteProveedor": "Proveedor",
-  "vendedor1": "Vendedor 1",
-  "vendedor2": "Vendedor 2",
-  "lider": "Líder",
+  "vendedor1": 1,
+  "vendedor2": 2,
+  "lider": 1,
   "ubrutaCoti": "UC001",
-  "comisionCompartida": "Comisión",
+  "comisionCompartida": true,
   "estado": true
 }
 

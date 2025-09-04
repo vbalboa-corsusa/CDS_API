@@ -4,7 +4,7 @@ namespace CDS_Models.DTOs
 {
     public class OrdenPedidoDTO
     {
-        public int IdOpci { get; set; }
+        public string IdOpci { get; set; }
 
         public DateTime? FecRecep { get; set; }
         public DateTime? FecInicio { get; set; }
@@ -14,13 +14,11 @@ namespace CDS_Models.DTOs
         public int? IdMda { get; set; }
 
         public int? IdFp { get; set; }
-        public int? IdClt { get; set; }
+        public string? IdClt { get; set; }
 
         public string? RsocialClt { get; set; }
 
-        public int? IdVdr { get; set; }
-        
-        public int? IdOpd { get; set; }
+        public string? IdVdr { get; set; }
 
         public string? NomVdr { get; set; }
 
@@ -32,11 +30,11 @@ namespace CDS_Models.DTOs
 
         public string? IbCltPrv { get; set; }
 
-        public string? IbVdr1 { get; set; }
+        public int? IbVdr1 { get; set; }
 
-        public string? IbVdr2 { get; set; }
+        public int? IbVdr2 { get; set; }
 
-        public string? IbLider { get; set; }
+        public int? IbLider { get; set; }
 
         public string? UbrutaCoti { get; set; }
 
