@@ -30,11 +30,11 @@ namespace CDS_Models.DTOs
 
         public string? IbCltPrv { get; set; }
 
-        public int? IbVdr1 { get; set; }
+        public bool? IbVdr1 { get; set; }
 
-        public int? IbVdr2 { get; set; }
+        public bool? IbVdr2 { get; set; }
 
-        public int? IbLider { get; set; }
+        public bool? IbLider { get; set; }
 
         public string? UbrutaCoti { get; set; }
 

@@ -51,13 +51,13 @@ namespace CDS_Models.Entities
         public string? IbCltPrv { get; set; }
 
         [Column("Ib_Vdr1")]
-        public int? IbVdr1 { get; set; }
+        public bool? IbVdr1 { get; set; }
 
         [Column("Ib_Vdr2")]
-        public int? IbVdr2 { get; set; }
+        public bool? IbVdr2 { get; set; }
 
         [Column("Ib_Lider")]
-        public int? IbLider { get; set; }
+        public bool? IbLider { get; set; }
 
         [StringLength(10)]
         public string? UbrutaCoti { get; set; }
