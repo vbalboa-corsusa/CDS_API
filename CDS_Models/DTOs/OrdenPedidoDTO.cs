@@ -40,7 +40,7 @@ namespace CDS_Models.DTOs
 
         public string? UbrutaCoti { get; set; }
 
-        public bool? ComisionCompartida { get; set; }
+        public string? ComisionCompartida { get; set; }
 
         public bool? Estado { get; set; }
     }
